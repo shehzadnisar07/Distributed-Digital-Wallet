@@ -212,7 +212,7 @@ export const WalletHome: React.FC<WalletHomeProps> = ({
     .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
 
   return (
-    <div className="space-y-8 font-sans max-w-7xl mx-auto pb-12 animate-in fade-in duration-300">
+    <div className="space-y-8 font-sans w-full pb-12 animate-in fade-in duration-300">
       {/* 1. Neobank Executive Header Banner */}
       <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#EBE5DF] shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <div>

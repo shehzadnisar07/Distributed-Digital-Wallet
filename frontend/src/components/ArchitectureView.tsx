@@ -3,7 +3,7 @@ import { ShieldCheck, Database, Cpu, ArrowRight, Lock, Server, GitMerge } from '
 
 export const ArchitectureView: React.FC = () => {
   return (
-    <div className="space-y-8 font-sans max-w-5xl mx-auto pb-8">
+    <div className="space-y-8 font-sans w-full pb-8">
       {/* Hero Header */}
       <div className="bg-white border border-[#EBE5DF] rounded-3xl p-6 sm:p-8 shadow-xs">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-[#F2ECE5]">

@@ -220,7 +220,7 @@ export const TransferConsole: React.FC<TransferConsoleProps> = ({
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 font-sans">
+    <div className="w-full space-y-6 font-sans">
       {/* Main Send Money Card */}
       <div className="bg-white border border-[#EBE5DF] rounded-3xl p-6 sm:p-8 shadow-xs">
         <div className="flex items-center justify-between pb-6 border-b border-[#F2ECE5]">

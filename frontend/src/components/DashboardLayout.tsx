@@ -14,7 +14,6 @@ import {
   ChevronDown,
   Database,
   Globe,
-  ChevronRight,
 } from 'lucide-react';
 import type { Account, SystemHealth, User } from '../types';
 import type { AppTab } from './Header';
@@ -342,18 +341,19 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 <span className="text-[9px] font-mono text-[#8C939E]">v1.0</span>
               </a>
 
-              {/* Public Overview / Landing Link */}
-              <button
-                type="button"
-                onClick={() => handleNavClick('landing')}
+              {/* Public Overview / Landing Link (Opens in new tab) */}
+              <a
+                href="/"
+                target="_blank"
+                rel="noreferrer"
                 className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-bold text-[#5F6773] hover:text-[#1A1D20] hover:bg-[#FAF7F4] transition cursor-pointer"
               >
                 <div className="flex items-center gap-3">
                   <Globe className="w-4 h-4 text-[#8C939E]" />
                   <span>Public Landing Page</span>
                 </div>
-                <ChevronRight className="w-3.5 h-3.5 text-[#8C939E]" />
-              </button>
+                <ExternalLink className="w-3.5 h-3.5 text-[#8C939E]" />
+              </a>
             </div>
           </div>
 
