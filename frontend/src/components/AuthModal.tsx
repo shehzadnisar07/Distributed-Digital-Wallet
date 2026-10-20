@@ -292,7 +292,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         </div>
 
         {/* Content Body */}
-        <div className="p-6 max-h-[75vh] overflow-y-auto space-y-4">
+        <div className="p-6 max-h-[85vh] overflow-y-auto space-y-3.5">
           {errorMsg && (
             <div className="p-3.5 rounded-2xl bg-[#FFEAE5] border border-[#FF6651]/20 text-xs text-[#FF6651] font-bold flex items-center gap-2">
               <span>⚠️</span>
@@ -390,7 +390,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   STEP 1: All Inputs (Name, Gmail, Phone, Password, Currency)
                  -------------------------------------------------------- */}
               {signupStep === 1 && (
-                <form onSubmit={handleStep1Submit} className="space-y-3.5">
+                <form onSubmit={handleStep1Submit} className="space-y-2.5">
                   <div className="space-y-0.5">
                     <h4 className="text-sm font-black text-[#1A1D20]">
                       Create your TransMoney profile
@@ -402,11 +402,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
                   {/* Full Name */}
                   <div>
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#5F6773] block mb-1">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#5F6773] block mb-0.5">
                       Full Legal Name
                     </label>
                     <div className="relative">
-                      <UserIcon className="w-4 h-4 text-[#5F6773] absolute left-3.5 top-3" />
+                      <UserIcon className="w-4 h-4 text-[#5F6773] absolute left-3.5 top-2.5" />
                       <input
                         type="text"
                         required
@@ -414,39 +414,39 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                         placeholder="e.g. Muhammad Ashraf"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF] text-[#1A1D20] text-xs placeholder:text-[#5F6773]/60 focus:outline-none focus:border-[#FF6651] focus:bg-white transition"
+                        className="w-full pl-10 pr-4 py-2 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF] text-[#1A1D20] text-xs placeholder:text-[#5F6773]/60 focus:outline-none focus:border-[#FF6651] focus:bg-white transition"
                       />
                     </div>
                   </div>
 
                   {/* Gmail / Email */}
                   <div>
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#5F6773] block mb-1">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#5F6773] block mb-0.5">
                       Gmail / Email Address
                     </label>
                     <div className="relative">
-                      <Mail className="w-4 h-4 text-[#5F6773] absolute left-3.5 top-3" />
+                      <Mail className="w-4 h-4 text-[#5F6773] absolute left-3.5 top-2.5" />
                       <input
                         type="email"
                         required
                         placeholder="yourname@gmail.com"
                         value={signUpEmail}
                         onChange={(e) => setSignUpEmail(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF] text-[#1A1D20] text-xs placeholder:text-[#5F6773]/60 focus:outline-none focus:border-[#FF6651] focus:bg-white transition"
+                        className="w-full pl-10 pr-4 py-2 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF] text-[#1A1D20] text-xs placeholder:text-[#5F6773]/60 focus:outline-none focus:border-[#FF6651] focus:bg-white transition"
                       />
                     </div>
                   </div>
 
                   {/* Mobile Phone */}
                   <div>
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#5F6773] block mb-1">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#5F6773] block mb-0.5">
                       Mobile Number
                     </label>
                     <div className="flex gap-2">
                       <select
                         value={countryCode}
                         onChange={(e) => setCountryCode(e.target.value)}
-                        className="w-24 px-2 py-2.5 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF] text-[#1A1D20] text-xs font-bold focus:outline-none focus:border-[#FF6651] focus:bg-white transition cursor-pointer"
+                        className="w-24 px-2 py-2 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF] text-[#1A1D20] text-xs font-bold focus:outline-none focus:border-[#FF6651] focus:bg-white transition cursor-pointer"
                       >
                         <option value="+92">🇵🇰 +92</option>
                         <option value="+1">🇺🇸 +1</option>
@@ -454,14 +454,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                         <option value="+971">🇦🇪 +971</option>
                       </select>
                       <div className="relative flex-1">
-                        <Phone className="w-4 h-4 text-[#5F6773] absolute left-3.5 top-3" />
+                        <Phone className="w-4 h-4 text-[#5F6773] absolute left-3.5 top-2.5" />
                         <input
                           type="tel"
                           required
                           placeholder="300 1234567"
                           value={phoneRaw}
                           onChange={(e) => setPhoneRaw(e.target.value)}
-                          className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF] text-[#1A1D20] text-xs font-mono placeholder:text-[#5F6773]/60 focus:outline-none focus:border-[#FF6651] focus:bg-white transition"
+                          className="w-full pl-10 pr-4 py-2 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF] text-[#1A1D20] text-xs font-mono placeholder:text-[#5F6773]/60 focus:outline-none focus:border-[#FF6651] focus:bg-white transition"
                         />
                       </div>
                     </div>
@@ -469,25 +469,25 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
                   {/* Password */}
                   <div>
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#5F6773] block mb-1">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#5F6773] block mb-0.5">
                       Create Password (min 6 characters)
                     </label>
                     <div className="relative">
-                      <Lock className="w-4 h-4 text-[#5F6773] absolute left-3.5 top-3" />
+                      <Lock className="w-4 h-4 text-[#5F6773] absolute left-3.5 top-2.5" />
                       <input
                         type="password"
                         required
                         placeholder="••••••••"
                         value={signUpPassword}
                         onChange={(e) => setSignUpPassword(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF] text-[#1A1D20] text-xs placeholder:text-[#5F6773]/60 focus:outline-none focus:border-[#FF6651] focus:bg-white transition"
+                        className="w-full pl-10 pr-4 py-2 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF] text-[#1A1D20] text-xs placeholder:text-[#5F6773]/60 focus:outline-none focus:border-[#FF6651] focus:bg-white transition"
                       />
                     </div>
                   </div>
 
                   {/* Primary Wallet Currency Selector */}
                   <div>
-                    <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center justify-between mb-1">
                       <label className="text-[11px] font-bold uppercase tracking-wider text-[#5F6773]">
                         Primary Currency
                       </label>
@@ -504,7 +504,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                             key={choice.currency}
                             type="button"
                             onClick={() => setSelectedCurrency(choice.currency)}
-                            className={`p-2.5 rounded-2xl text-left border transition flex items-center gap-2 cursor-pointer ${
+                            className={`p-2 rounded-2xl text-left border transition flex items-center gap-2 cursor-pointer ${
                               isSelected
                                 ? 'bg-[#1A1D20] text-white border-[#1A1D20] shadow-xs'
                                 : 'bg-[#FAF7F4] hover:bg-white text-[#1A1D20] border-[#EBE5DF]'
@@ -528,7 +528,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
                   <button
                     type="submit"
-                    className="w-full py-3.5 px-4 rounded-full bg-[#FF6651] hover:bg-[#E54D34] active:scale-95 text-white font-black text-sm flex items-center justify-center gap-2 shadow-md shadow-[#FF6651]/25 transition cursor-pointer mt-2"
+                    className="w-full py-3.5 px-4 rounded-full bg-[#FF6651] hover:bg-[#E54D34] active:scale-95 text-white font-black text-sm flex items-center justify-center gap-2 shadow-md shadow-[#FF6651]/25 transition cursor-pointer mt-1"
                   >
                     <span>Continue to Gmail Verification</span>
                     <ArrowRight className="w-4 h-4" />
@@ -542,7 +542,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               {signupStep === 2 && (
                 <form onSubmit={handleVerifyAndRegister} className="space-y-4">
                   <div className="text-center space-y-1.5 py-2">
-                    <div className="w-12 h-12 rounded-2xl bg-[#E5F7F3] border border-[#00A389]/30 text-[#00A389] flex items-center justify-center mx-auto shadow-xs">
+                    <div className="w-12 h-12 rounded-2xl bg-[#FFEAE5] border border-[#FF6651]/30 text-[#FF6651] flex items-center justify-center mx-auto shadow-xs">
                       <Mail className="w-6 h-6" />
                     </div>
                     <h4 className="text-base font-black text-[#1A1D20]">
@@ -558,7 +558,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   <div className="p-4 bg-[#FAF7F4] rounded-3xl border border-[#EBE5DF] space-y-3">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-bold text-[#1A1D20] flex items-center gap-1.5">
-                        <ShieldCheck className="w-4 h-4 text-[#00A389]" />
+                        <ShieldCheck className="w-4 h-4 text-[#FF6651]" />
                         <span>Enter 6-Digit Code</span>
                       </span>
                       <button
@@ -579,7 +579,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                         value={otpCode}
                         onChange={(e) => setOtpCode(e.target.value.replace(/[^0-9]/g, ''))}
                         placeholder="849201"
-                        className="w-full text-center tracking-[0.5em] font-mono font-black text-xl py-3 rounded-2xl bg-white border border-[#EBE5DF] text-[#1A1D20] focus:outline-none focus:border-[#00A389] shadow-xs"
+                        className="w-full text-center tracking-[0.5em] font-mono font-black text-xl py-3 rounded-2xl bg-white border border-[#EBE5DF] text-[#1A1D20] focus:outline-none focus:border-[#FF6651] shadow-xs"
                       />
                     </div>
 
@@ -589,26 +589,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                         type="button"
                         disabled={countdown > 0}
                         onClick={() => setCountdown(45)}
-                        className={`font-bold ${countdown > 0 ? 'text-[#5F6773]/60' : 'text-[#00A389] hover:underline cursor-pointer'}`}
+                        className={`font-bold ${countdown > 0 ? 'text-[#5F6773]/60' : 'text-[#FF6651] hover:underline cursor-pointer'}`}
                       >
                         Resend code {countdown > 0 ? `(${countdown}s)` : ''}
                       </button>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 pt-1">
-                    <button
-                      type="button"
-                      onClick={() => setSignupStep(1)}
-                      className="px-4 py-3.5 rounded-full border border-[#EBE5DF] text-[#1A1D20] font-bold text-xs hover:bg-[#FAF7F4] transition cursor-pointer flex items-center gap-1.5"
-                    >
-                      <ArrowLeft className="w-3.5 h-3.5" />
-                      <span>Back</span>
-                    </button>
+                  {/* Vertically Stacked Action Buttons */}
+                  <div className="space-y-2 pt-1">
                     <button
                       type="submit"
                       disabled={loading}
-                      className="flex-1 py-3.5 px-4 rounded-full bg-[#00A389] hover:bg-[#008F78] active:scale-95 text-white font-black text-sm flex items-center justify-center gap-2 shadow-md shadow-[#00A389]/25 transition disabled:opacity-50 cursor-pointer"
+                      className="w-full py-3.5 px-4 rounded-full bg-[#FF6651] hover:bg-[#E54D34] active:scale-95 text-white font-black text-sm flex items-center justify-center gap-2 shadow-md shadow-[#FF6651]/25 transition disabled:opacity-50 cursor-pointer"
                     >
                       {loading ? (
                         <>
@@ -621,6 +614,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                           <span>Verify &amp; Open Account</span>
                         </>
                       )}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setSignupStep(1)}
+                      className="w-full py-2.5 px-4 rounded-full border border-[#EBE5DF] bg-[#FAF7F4] hover:bg-[#F2ECE5] text-[#5F6773] hover:text-[#1A1D20] font-bold text-xs transition cursor-pointer flex items-center justify-center gap-1.5"
+                    >
+                      <ArrowLeft className="w-3.5 h-3.5" />
+                      <span>Back to Account Details</span>
                     </button>
                   </div>
                 </form>
