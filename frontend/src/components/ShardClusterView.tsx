@@ -14,56 +14,58 @@ interface RegionMeta {
   label: string;
   region: string;
   role: string;
+  port: number;
+  currency: string;
 }
 
 const REGION_CONFIG: Record<string, RegionMeta> = {
   SHARD_1_NORTH: {
     code: 'HUB-01',
-    label: 'North Region',
-    region: 'Islamabad / KPK',
-    role: 'Primary Hub',
+    label: 'North Pakistan Regional Node',
+    region: 'Islamabad / Rawalpindi / KP',
+    role: 'Primary Partition',
+    port: 5432,
+    currency: 'PKR',
   },
   SHARD_2_CENTRAL: {
     code: 'HUB-02',
-    label: 'Central Region',
-    region: 'Lahore / Punjab',
-    role: 'Primary Hub',
+    label: 'Central Pakistan Regional Node',
+    region: 'Lahore / Faisalabad / Punjab',
+    role: 'Primary Partition',
+    port: 5434,
+    currency: 'PKR',
   },
   SHARD_3_SOUTH: {
     code: 'HUB-03',
-    label: 'South Region',
-    region: 'Karachi / Sindh',
-    role: 'Primary Hub',
+    label: 'South Pakistan Regional Node',
+    region: 'Karachi / Hyderabad / Sindh',
+    role: 'Primary Partition',
+    port: 5436,
+    currency: 'PKR',
   },
   SHARD_4_ENTERPRISE: {
     code: 'HUB-04',
-    label: 'Business Hub',
-    region: 'Corporate & Merchant',
-    role: 'Business Hub',
+    label: 'Enterprise & Merchant Clearing Hub',
+    region: 'Karachi FinTech Enterprise Center',
+    role: 'High-Volume Settlement Node',
+    port: 5438,
+    currency: 'PKR',
   },
   SHARD_1_US: {
-    code: 'HUB-01',
-    label: 'US Region',
-    region: 'North America / New York',
-    role: 'Primary Hub',
+    code: 'HUB-US',
+    label: 'North America FX Gateway',
+    region: 'New York, USA',
+    role: 'USD Foreign Exchange Settlement',
+    port: 5440,
+    currency: 'USD',
   },
   SHARD_2_UK: {
-    code: 'HUB-02',
-    label: 'UK Region',
-    region: 'Europe / London',
-    role: 'Primary Hub',
-  },
-  SHARD_3_SG: {
-    code: 'HUB-03',
-    label: 'Asia Region',
-    region: 'Asia-Pacific / Singapore',
-    role: 'Primary Hub',
-  },
-  SHARD_4_UAE: {
-    code: 'HUB-04',
-    label: 'Middle East Region',
-    region: 'Middle East / Dubai',
-    role: 'Business Hub',
+    code: 'HUB-UK',
+    label: 'Europe & UK Cross-Border Node',
+    region: 'London, United Kingdom',
+    role: 'GBP International Gateway',
+    port: 5442,
+    currency: 'GBP',
   },
 };
 
@@ -80,54 +82,64 @@ export const ShardClusterView: React.FC<ShardClusterViewProps> = ({
     'SHARD_4_ENTERPRISE',
   ];
 
-  const totalBalance = accounts.reduce((sum, a) => sum + Number(a.balance), 0);
+  const totalBalancePkr = accounts
+    .filter((a) => (a.currency || 'PKR') === 'PKR')
+    .reduce((sum, a) => sum + Number(a.balance), 0);
 
   return (
-    <div className="space-y-4 font-sans bg-white text-black">
-      {/* Section Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-2 border-b border-slate-200">
-        <div className="flex items-center gap-2">
-          <Layers className="w-4 h-4 text-black" />
-          <h2 className="text-sm font-bold text-black uppercase tracking-wider font-mono">
-            Regional Hubs Overview
-          </h2>
+    <div className="space-y-6 font-sans">
+      {/* Topology Header */}
+      <div className="bg-white border border-[#EBE5DF] rounded-3xl p-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <span className="p-1.5 rounded-lg bg-[#FAF7F4] text-[#FF6651] border border-[#EBE5DF]">
+              <Layers className="w-4 h-4" />
+            </span>
+            <h2 className="text-lg font-black text-[#1A1D20] tracking-tight">
+              Distributed Shard Cluster Topology
+            </h2>
+            <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-[#E5F7F3] text-[#00A389] border border-[#00A389]/20 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#00A389] animate-pulse" />
+              Shared-Nothing Active
+            </span>
+          </div>
+          <p className="text-xs text-[#5F6773]">
+            Horizontal fragmentation across regional partitions with independent PostgreSQL nodes and deterministic Two-Phase Commit consensus
+          </p>
         </div>
-        <div className="flex items-center gap-3 font-mono text-xs">
-          <span className="text-slate-600">
-            Total Balance:{' '}
-            <strong className="text-black font-bold">
-              {totalBalance.toLocaleString('en-US', { minimumFractionDigits: 0 })} PKR
-            </strong>
-          </span>
+
+        <div className="flex items-center gap-3">
+          <div className="text-right">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-[#5F6773] block">
+              Network Liquidity
+            </span>
+            <span className="text-base font-black text-[#1A1D20]">
+              {totalBalancePkr.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              <span className="text-xs font-semibold text-[#5F6773] ml-1">PKR</span>
+            </span>
+          </div>
+
           {onOpenCreateAccount && (
             <button
               onClick={onOpenCreateAccount}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 border border-slate-200 text-black transition cursor-pointer text-[11px] font-medium"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1A1D20] hover:bg-black text-white text-xs font-bold transition shadow-xs cursor-pointer"
             >
-              <Plus className="w-3 h-3" />
-              <span>Open Account</span>
+              <Plus className="w-3.5 h-3.5" />
+              <span>Open Shard Account</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* Grid of Regions */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {primaryRegions.map((regionKey, index) => {
-          const cfg = REGION_CONFIG[regionKey] || {
-            code: `HUB-0${index + 1}`,
-            label: regionKey,
-            region: 'Service Region',
-            role: 'Active Hub',
-          };
-
+      {/* Grid of Regional Shards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {primaryRegions.map((regionKey) => {
+          const cfg = REGION_CONFIG[regionKey];
           const regionAccounts = accounts.filter(
             (a) =>
               a.shard === regionKey ||
               (regionKey === 'SHARD_1_NORTH' && a.shard === 'SHARD_1_US') ||
-              (regionKey === 'SHARD_2_CENTRAL' && a.shard === 'SHARD_2_UK') ||
-              (regionKey === 'SHARD_3_SOUTH' && a.shard === 'SHARD_3_SG') ||
-              (regionKey === 'SHARD_4_ENTERPRISE' && a.shard === 'SHARD_4_UAE')
+              (regionKey === 'SHARD_2_CENTRAL' && a.shard === 'SHARD_2_UK')
           );
 
           const regionBalance = regionAccounts.reduce(
@@ -138,53 +150,54 @@ export const ShardClusterView: React.FC<ShardClusterViewProps> = ({
           return (
             <div
               key={regionKey}
-              className="rounded-xl border border-slate-200 bg-white p-4 transition-all duration-200 hover:border-slate-400 flex flex-col justify-between space-y-4 shadow-xs"
+              className="bg-white border border-[#EBE5DF] rounded-3xl p-5 shadow-xs hover:border-[#FF6651]/40 transition flex flex-col justify-between space-y-4"
             >
               <div>
-                {/* Region Meta Header */}
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-slate-100 text-black border border-slate-200">
+                {/* Shard Meta Header */}
+                <div className="flex items-center justify-between pb-3 border-b border-[#F2ECE5]">
+                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#FAF7F4] text-[#1A1D20] border border-[#EBE5DF]">
                     {cfg.code}
                   </span>
-                  <div className="flex items-center gap-1.5 text-[11px] font-mono text-slate-600">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <span>ACTIVE</span>
+                  <div className="flex items-center gap-1.5 text-[11px] font-semibold text-[#00A389]">
+                    <span className="w-2 h-2 rounded-full bg-[#00A389] animate-pulse" />
+                    <span>PORT {cfg.port}</span>
                   </div>
                 </div>
 
-                <div className="space-y-0.5">
-                  <h3 className="text-sm font-bold text-black uppercase tracking-tight">
+                <div className="mt-3 space-y-1">
+                  <h3 className="text-sm font-black text-[#1A1D20] tracking-tight">
                     {cfg.label}
                   </h3>
-                  <p className="text-[11px] text-slate-500 font-mono truncate">{cfg.region}</p>
+                  <p className="text-xs text-[#5F6773] font-medium truncate">{cfg.region}</p>
                 </div>
 
-                {/* Balance Counter */}
-                <div className="mt-3 p-2.5 rounded-lg border border-slate-200 bg-slate-50">
-                  <span className="text-[10px] uppercase font-mono tracking-wider text-slate-500 block">
-                    Region Balance
-                  </span>
-                  <span className="text-base font-bold text-black font-mono block">
+                {/* Shard Balance Card */}
+                <div className="mt-4 p-3.5 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF]">
+                  <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-[#5F6773]">
+                    <span>Partition Balance</span>
+                    <span className="text-[#00A389]">ONLINE</span>
+                  </div>
+                  <div className="text-lg font-black text-[#1A1D20] mt-0.5">
                     {regionBalance.toLocaleString('en-US', {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}{' '}
-                    <span className="text-xs text-slate-500 font-normal">PKR</span>
-                  </span>
+                    <span className="text-xs font-semibold text-[#5F6773]">PKR</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Accounts inside this region */}
-              <div className="pt-2 border-t border-slate-100 space-y-2">
-                <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-slate-400">
+              {/* Shard Accounts List */}
+              <div className="pt-2 border-t border-[#F2ECE5] space-y-2">
+                <div className="flex items-center justify-between text-[11px] font-bold text-[#5F6773]">
                   <span>Accounts ({regionAccounts.length})</span>
-                  <span>ID / BAL</span>
+                  <span>Balance</span>
                 </div>
 
-                <div className="space-y-1.5">
+                <div className="space-y-1.5 max-h-48 overflow-y-auto">
                   {regionAccounts.length === 0 ? (
-                    <div className="text-center py-3 text-[11px] text-slate-400 font-mono">
-                      No accounts in this region
+                    <div className="text-center py-4 text-xs text-[#5F6773] bg-[#FAF7F4] rounded-xl border border-dashed border-[#EBE5DF]">
+                      No active accounts
                     </div>
                   ) : (
                     regionAccounts.map((acc) => {
@@ -193,21 +206,23 @@ export const ShardClusterView: React.FC<ShardClusterViewProps> = ({
                         <button
                           key={acc.id}
                           onClick={() => onSelectAccount(acc.id)}
-                          className={`w-full text-left p-2 rounded-lg text-xs font-mono transition flex items-center justify-between border cursor-pointer ${
+                          className={`w-full text-left p-2.5 rounded-2xl text-xs transition flex items-center justify-between border cursor-pointer ${
                             isSelected
-                              ? 'bg-black text-white font-bold border-black shadow-xs'
-                              : 'bg-white hover:bg-slate-50 text-black border-slate-200'
+                              ? 'bg-[#1A1D20] text-white font-bold border-[#1A1D20] shadow-sm'
+                              : 'bg-white hover:bg-[#FAF7F4] text-[#1A1D20] border-[#EBE5DF]'
                           }`}
                         >
-                          <div className="flex items-center gap-1.5 truncate">
-                            <Wallet className="w-3.5 h-3.5 shrink-0 opacity-70" />
+                          <div className="flex items-center gap-2 truncate">
+                            <div className={`p-1.5 rounded-lg ${isSelected ? 'bg-white/10 text-white' : 'bg-[#FAF7F4] text-[#FF6651]'}`}>
+                              <Wallet className="w-3.5 h-3.5 shrink-0" />
+                            </div>
                             <div className="truncate text-left">
-                              <span className="block truncate font-semibold">
+                              <span className="block truncate font-bold">
                                 {acc.user?.fullName || `Account #${acc.id}`}
                               </span>
                               <span
-                                className={`text-[10px] block ${
-                                  isSelected ? 'text-slate-300' : 'text-slate-500'
+                                className={`text-[10px] block font-mono ${
+                                  isSelected ? 'text-white/70' : 'text-[#5F6773]'
                                 }`}
                               >
                                 {acc.accountNumber}
@@ -216,15 +231,15 @@ export const ShardClusterView: React.FC<ShardClusterViewProps> = ({
                           </div>
 
                           <div className="text-right shrink-0 ml-2">
-                            <span className="block font-bold">
-                              {Number(acc.balance).toFixed(0)}
+                            <span className="block font-black">
+                              {Number(acc.balance).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                             </span>
                             <span
-                              className={`text-[9px] block ${
-                                isSelected ? 'text-slate-300' : 'text-slate-500'
+                              className={`text-[9px] block uppercase font-bold ${
+                                isSelected ? 'text-white/70' : 'text-[#5F6773]'
                               }`}
                             >
-                              PKR
+                              {acc.currency || 'PKR'}
                             </span>
                           </div>
                         </button>

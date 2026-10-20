@@ -89,44 +89,44 @@ export const SystemBufferDashboard: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-sans">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-900 text-white p-6 rounded-2xl shadow-md border border-slate-800">
+      <div className="bg-[#1A1D20] text-white p-6 sm:p-8 rounded-3xl shadow-md border border-neutral-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="px-2 py-0.5 rounded text-[11px] font-mono font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-              PHASE 7 PRODUCTION
+          <div className="flex items-center gap-2 mb-2">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#FF6651]/20 text-[#FF6651] border border-[#FF6651]/30 uppercase tracking-wider">
+              Distributed Caching Engine
             </span>
-            <span className="text-xs text-slate-400 font-mono">Distributed High-Throughput Engine</span>
+            <span className="text-xs text-neutral-400 font-mono">Redis In-Memory • Sub-Millisecond Reads</span>
           </div>
-          <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-            <Zap className="w-5 h-5 text-amber-400" />
-            Redis Balance Caching &amp; Asynchronous Queue Buffer
+          <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2.5">
+            <Zap className="w-6 h-6 text-amber-400" />
+            <span>Dual-Tier Balance Cache &amp; Async Queue Buffer</span>
           </h2>
-          <p className="text-xs text-slate-400 mt-1 max-w-2xl leading-relaxed">
+          <p className="text-xs text-neutral-400 mt-1 max-w-2xl leading-relaxed">
             Accelerates sub-millisecond balance reads via dual-tier Redis caching, decouples post-transaction
             heavy side effects with an async queue buffer, and broadcasts live WebSocket push notifications.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 shrink-0">
           <button
             onClick={handleWarmCache}
-            className="flex items-center gap-1.5 px-3 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold text-xs rounded-xl shadow transition cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-amber-400 hover:bg-amber-300 text-black font-bold text-xs rounded-xl shadow-xs transition cursor-pointer"
           >
             <Flame className="w-3.5 h-3.5" />
-            <span>Pre-Warm Cache</span>
+            <span>Pre-Warm</span>
           </button>
           <button
             onClick={handleClearCache}
-            className="flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-rose-300 font-semibold text-xs rounded-xl border border-slate-700 transition cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-neutral-900 hover:bg-neutral-800 text-rose-300 font-bold text-xs rounded-xl border border-neutral-700 transition cursor-pointer"
           >
             <Trash2 className="w-3.5 h-3.5" />
-            <span>Purge Cache</span>
+            <span>Purge</span>
           </button>
           <button
             onClick={refreshMetrics}
-            className="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl border border-slate-700 transition cursor-pointer"
+            className="p-2 bg-neutral-900 hover:bg-neutral-800 text-neutral-300 rounded-xl border border-neutral-700 transition cursor-pointer"
             title="Refresh Metrics"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -135,8 +135,8 @@ export const SystemBufferDashboard: React.FC = () => {
       </div>
 
       {actionMessage && (
-        <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs flex items-center gap-2 font-medium">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+        <div className="p-4 bg-[#E5F7F3] border border-[#00A389]/30 text-[#00A389] rounded-2xl text-xs flex items-center gap-2 font-bold shadow-xs">
+          <CheckCircle2 className="w-4 h-4 text-[#00A389] shrink-0" />
           <span>{actionMessage}</span>
         </div>
       )}
@@ -144,111 +144,115 @@ export const SystemBufferDashboard: React.FC = () => {
       {/* KPI Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Metric 1: Cache Hit Ratio */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
-          <div className="flex items-center justify-between text-slate-500 text-xs font-mono mb-2">
-            <span>CACHE HIT RATIO</span>
-            <Activity className="w-4 h-4 text-emerald-600" />
+        <div className="bg-white p-5 rounded-3xl border border-[#EBE5DF] shadow-xs">
+          <div className="flex items-center justify-between text-[#5F6773] text-[10px] font-bold uppercase tracking-wider mb-2">
+            <span>Cache Hit Ratio</span>
+            <Activity className="w-4 h-4 text-[#00A389]" />
           </div>
-          <div className="text-2xl font-bold text-slate-900">
+          <div className="text-2xl font-black text-[#1A1D20]">
             {cacheStats ? `${cacheStats.hitRatePercentage}%` : '0%'}
           </div>
-          <div className="mt-2 text-[11px] text-slate-500 flex items-center justify-between font-mono">
+          <div className="mt-2 text-[11px] text-[#5F6773] flex items-center justify-between">
             <span>Hits: {cacheStats?.hits ?? 0}</span>
             <span>Misses: {cacheStats?.misses ?? 0}</span>
           </div>
         </div>
 
         {/* Metric 2: Cache Evictions */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
-          <div className="flex items-center justify-between text-slate-500 text-xs font-mono mb-2">
-            <span>2PC CACHE EVICTIONS</span>
-            <Database className="w-4 h-4 text-sky-600" />
+        <div className="bg-white p-5 rounded-3xl border border-[#EBE5DF] shadow-xs">
+          <div className="flex items-center justify-between text-[#5F6773] text-[10px] font-bold uppercase tracking-wider mb-2">
+            <span>2PC Cache Evictions</span>
+            <Database className="w-4 h-4 text-[#FF6651]" />
           </div>
-          <div className="text-2xl font-bold text-slate-900">
+          <div className="text-2xl font-black text-[#1A1D20]">
             {cacheStats?.evictions ?? 0}
           </div>
-          <div className="mt-2 text-[11px] text-slate-500 flex items-center justify-between font-mono">
-            <span>In-Memory Entries: {cacheStats?.inMemoryEntries ?? 0}</span>
-            <span className={cacheStats?.redisConnected ? 'text-emerald-600' : 'text-amber-600'}>
+          <div className="mt-2 text-[11px] text-[#5F6773] flex items-center justify-between">
+            <span>In-Memory: {cacheStats?.inMemoryEntries ?? 0}</span>
+            <span className={cacheStats?.redisConnected ? 'text-[#00A389] font-bold' : 'text-amber-600 font-bold'}>
               {cacheStats?.redisConnected ? '● Redis Online' : '● Local Fallback'}
             </span>
           </div>
         </div>
 
         {/* Metric 3: Async Queue Throughput */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
-          <div className="flex items-center justify-between text-slate-500 text-xs font-mono mb-2">
-            <span>QUEUE THROUGHPUT</span>
+        <div className="bg-white p-5 rounded-3xl border border-[#EBE5DF] shadow-xs">
+          <div className="flex items-center justify-between text-[#5F6773] text-[10px] font-bold uppercase tracking-wider mb-2">
+            <span>Queue Processed</span>
             <Cpu className="w-4 h-4 text-indigo-600" />
           </div>
-          <div className="text-2xl font-bold text-slate-900">
+          <div className="text-2xl font-black text-[#1A1D20]">
             {queueStats?.totalProcessed ?? 0}
           </div>
-          <div className="mt-2 text-[11px] text-slate-500 flex items-center justify-between font-mono">
+          <div className="mt-2 text-[11px] text-[#5F6773] flex items-center justify-between">
             <span>Enqueued: {queueStats?.totalEnqueued ?? 0}</span>
             <span>Buffer Depth: {queueStats?.pendingBufferSize ?? 0}</span>
           </div>
         </div>
 
         {/* Metric 4: WebSocket Real-Time Stream */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
-          <div className="flex items-center justify-between text-slate-500 text-xs font-mono mb-2">
-            <span>WEBSOCKET STATUS</span>
+        <div className="bg-white p-5 rounded-3xl border border-[#EBE5DF] shadow-xs">
+          <div className="flex items-center justify-between text-[#5F6773] text-[10px] font-bold uppercase tracking-wider mb-2">
+            <span>WebSocket Channel</span>
             <Radio className="w-4 h-4 text-purple-600" />
           </div>
           <div className="flex items-center gap-2">
-            <span className={`w-3 h-3 rounded-full ${wsConnected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
-            <span className="text-lg font-bold text-slate-900 font-sans">
-              {wsConnected ? 'Connected' : 'Connecting'}
+            <span className={`w-2.5 h-2.5 rounded-full ${wsConnected ? 'bg-[#00A389] animate-pulse' : 'bg-amber-500'}`} />
+            <span className="text-lg font-black text-[#1A1D20]">
+              {wsConnected ? 'Live Connected' : 'Connecting'}
             </span>
           </div>
-          <div className="mt-2 text-[11px] text-slate-500 flex items-center justify-between font-mono">
-            <span>Active Clients: {queueStats?.activeWebSocketConnections ?? (wsConnected ? 1 : 0)}</span>
-            <span className="text-emerald-600">Sub-10ms Push</span>
+          <div className="mt-2 text-[11px] text-[#5F6773] flex items-center justify-between">
+            <span>Clients: {queueStats?.activeWebSocketConnections ?? (wsConnected ? 1 : 0)}</span>
+            <span className="text-[#00A389] font-semibold">Sub-10ms Push</span>
           </div>
         </div>
       </div>
 
-      {/* Architectural Diagram & Real-Time Stream */}
+      {/* Architectural Explanation & Live Stream */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Pipeline Architecture Explanation */}
-        <div className="lg:col-span-5 bg-white p-6 rounded-2xl border border-slate-200 shadow-2xs space-y-4">
-          <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-            <Layers className="w-4 h-4 text-slate-700" />
-            Asynchronous Buffer Architecture
-          </h3>
-          <p className="text-xs text-slate-600 leading-relaxed">
+        <div className="lg:col-span-5 bg-white p-6 sm:p-7 rounded-3xl border border-[#EBE5DF] shadow-xs space-y-4">
+          <div className="flex items-center gap-2">
+            <span className="p-1.5 rounded-lg bg-[#FAF7F4] text-[#FF6651] border border-[#EBE5DF]">
+              <Layers className="w-4 h-4" />
+            </span>
+            <h3 className="text-sm font-black text-[#1A1D20] tracking-tight">
+              Asynchronous Buffer Pipeline
+            </h3>
+          </div>
+          <p className="text-xs text-[#5F6773] leading-relaxed">
             When 2PC transfers, FX exchanges, or deposits finalize in PostgreSQL, post-transaction side effects
             are cleanly isolated from the synchronous ACID commit path:
           </p>
 
-          <div className="space-y-3 font-mono text-xs">
-            <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
-              <div className="flex items-center justify-between text-slate-800 font-semibold mb-1">
+          <div className="space-y-3 text-xs">
+            <div className="p-3.5 bg-[#FAF7F4] border border-[#EBE5DF] rounded-2xl space-y-1">
+              <div className="flex items-center justify-between font-bold text-[#1A1D20]">
                 <span>1. Synchronous 2PC Commit</span>
-                <span className="text-emerald-600 text-[10px] px-1.5 py-0.5 bg-emerald-50 rounded">ACID Guaranteed</span>
+                <span className="text-[#00A389] text-[10px] px-2 py-0.5 bg-[#E5F7F3] rounded-full">ACID Guaranteed</span>
               </div>
-              <p className="text-[11px] text-slate-500 font-sans">
-                Ordered locks acquire accounts, validate balances, update balances, write GAAP journal entries.
+              <p className="text-[11px] text-[#5F6773] leading-relaxed">
+                Ordered locks acquire accounts, validate balances, update balances, and write immutable GAAP ledger records.
               </p>
             </div>
 
-            <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
-              <div className="flex items-center justify-between text-slate-800 font-semibold mb-1">
+            <div className="p-3.5 bg-[#FAF7F4] border border-[#EBE5DF] rounded-2xl space-y-1">
+              <div className="flex items-center justify-between font-bold text-[#1A1D20]">
                 <span>2. Cache Eviction &amp; Enqueue</span>
-                <span className="text-sky-600 text-[10px] px-1.5 py-0.5 bg-sky-50 rounded">Dual-Tier Invalidate</span>
+                <span className="text-sky-700 text-[10px] px-2 py-0.5 bg-sky-50 rounded-full">Dual-Tier Evict</span>
               </div>
-              <p className="text-[11px] text-slate-500 font-sans">
-                Sender &amp; receiver balance caches evicted in Redis &amp; local memory; <code className="text-slate-800">TransactionEvent</code> pushed to queue buffer.
+              <p className="text-[11px] text-[#5F6773] leading-relaxed">
+                Sender &amp; receiver balance caches evicted in Redis &amp; local memory; <code className="text-[#1A1D20] font-mono">TransactionEvent</code> buffered.
               </p>
             </div>
 
-            <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
-              <div className="flex items-center justify-between text-slate-800 font-semibold mb-1">
-                <span>3. Async Worker Drain &amp; WS Push</span>
-                <span className="text-purple-600 text-[10px] px-1.5 py-0.5 bg-purple-50 rounded">Zero Contention</span>
+            <div className="p-3.5 bg-[#FAF7F4] border border-[#EBE5DF] rounded-2xl space-y-1">
+              <div className="flex items-center justify-between font-bold text-[#1A1D20]">
+                <span>3. Worker Drain &amp; WS Push</span>
+                <span className="text-purple-700 text-[10px] px-2 py-0.5 bg-purple-50 rounded-full">Zero Wait</span>
               </div>
-              <p className="text-[11px] text-slate-500 font-sans">
+              <p className="text-[11px] text-[#5F6773] leading-relaxed">
                 Background thread worker pulls events, dispatches notifications, and pushes real-time WebSocket frames to browser.
               </p>
             </div>
@@ -256,25 +260,25 @@ export const SystemBufferDashboard: React.FC = () => {
         </div>
 
         {/* Right Column: Live Event Stream Terminal */}
-        <div className="lg:col-span-7 bg-slate-950 text-slate-200 p-6 rounded-2xl shadow-lg border border-slate-800 flex flex-col justify-between">
+        <div className="lg:col-span-7 bg-[#1A1D20] text-neutral-200 p-6 sm:p-7 rounded-3xl shadow-md border border-neutral-800 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+            <div className="flex items-center justify-between pb-3.5 border-b border-neutral-800 mb-4">
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#00A389] animate-ping" />
                 <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
                   Live WebSocket Transaction Stream
                 </span>
               </div>
-              <span className="text-[11px] font-mono text-slate-400">
+              <span className="text-[11px] font-mono text-neutral-400">
                 {eventStream.length} Events Captured
               </span>
             </div>
 
             {eventStream.length === 0 ? (
-              <div className="py-12 text-center text-slate-500 text-xs font-mono space-y-2">
-                <Radio className="w-8 h-8 mx-auto opacity-30 text-emerald-400 animate-pulse" />
+              <div className="py-12 text-center text-neutral-500 text-xs font-mono space-y-2">
+                <Radio className="w-8 h-8 mx-auto opacity-30 text-[#00A389] animate-pulse" />
                 <p>Waiting for live transaction events...</p>
-                <p className="text-[11px] text-slate-600">
+                <p className="text-[11px] text-neutral-600">
                   Execute a Send Money transfer, Deposit, or FX exchange to see live WebSocket push frames appear here.
                 </p>
               </div>
@@ -283,22 +287,22 @@ export const SystemBufferDashboard: React.FC = () => {
                 {eventStream.map((evt) => (
                   <div
                     key={evt.eventId || Math.random()}
-                    className="p-3 bg-slate-900 border border-slate-800 rounded-xl font-mono text-xs hover:border-slate-700 transition"
+                    className="p-3.5 bg-neutral-900 border border-neutral-800 rounded-2xl font-mono text-xs hover:border-neutral-700 transition"
                   >
                     <div className="flex items-center justify-between text-[11px] mb-1">
-                      <span className="text-emerald-400 font-semibold flex items-center gap-1.5">
-                        <Zap className="w-3 h-3" />
+                      <span className="text-[#00A389] font-bold flex items-center gap-1.5">
+                        <Zap className="w-3.5 h-3.5 text-amber-400" />
                         {evt.eventType}
                       </span>
-                      <span className="text-slate-500 flex items-center gap-1">
+                      <span className="text-neutral-500 flex items-center gap-1">
                         <Clock className="w-3 h-3" />
                         {evt.timestamp ? new Date(evt.timestamp).toLocaleTimeString() : 'Just now'}
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between text-xs text-slate-300 mt-1">
+                    <div className="flex items-center justify-between text-xs text-neutral-300 mt-1">
                       <span>
-                        Tx: <span className="text-white font-semibold">{evt.transactionId}</span>
+                        Tx: <span className="text-white font-bold">{evt.transactionId}</span>
                       </span>
                       <span className="text-emerald-300 font-bold">
                         {evt.amount} {evt.currency}
@@ -306,7 +310,7 @@ export const SystemBufferDashboard: React.FC = () => {
                     </div>
 
                     {evt.description && (
-                      <p className="text-[11px] text-slate-400 mt-1 truncate">
+                      <p className="text-[11px] text-neutral-400 mt-1 truncate">
                         {evt.description}
                       </p>
                     )}
@@ -316,12 +320,12 @@ export const SystemBufferDashboard: React.FC = () => {
             )}
           </div>
 
-          <div className="pt-4 border-t border-slate-800/80 mt-4 flex items-center justify-between text-[11px] font-mono text-slate-400">
+          <div className="pt-4 border-t border-neutral-800/80 mt-4 flex items-center justify-between text-[11px] font-mono text-neutral-400">
             <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
-              Endpoint: <code className="text-slate-300">/ws/wallet</code>
+              <span className="w-2 h-2 rounded-full bg-[#00A389]" />
+              Endpoint: <code className="text-neutral-300">/ws/wallet</code>
             </span>
-            <span>Channel: <code className="text-slate-300">transmoney:events</code></span>
+            <span>Channel: <code className="text-neutral-300">transmoney:events</code></span>
           </div>
         </div>
       </div>

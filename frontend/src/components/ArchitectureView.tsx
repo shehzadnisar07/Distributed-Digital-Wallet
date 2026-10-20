@@ -1,193 +1,186 @@
 import React from 'react';
-import { Globe, Layers, ShieldCheck } from 'lucide-react';
+import { ShieldCheck, Database, Cpu, ArrowRight, Lock, Server, GitMerge } from 'lucide-react';
 
 export const ArchitectureView: React.FC = () => {
   return (
-    <div className="space-y-8 font-sans max-w-5xl mx-auto pb-8 bg-white text-black">
-      {/* Title */}
-      <div className="border-b border-slate-200 pb-4 space-y-1">
-        <span className="text-xs font-mono uppercase tracking-widest text-slate-500">
-          About TransMoney
-        </span>
-        <h2 className="text-2xl font-black text-black uppercase tracking-tight">
-          How TransMoney Works
-        </h2>
-        <p className="text-xs text-slate-600 font-mono">
-          A fast, secure, and reliable digital wallet built for real people.
-        </p>
-      </div>
-
-      {/* Platform Overview */}
-      <div className="space-y-4">
-        <h3 className="text-sm font-bold text-black uppercase tracking-wider font-mono flex items-center gap-2">
-          <Layers className="w-4 h-4 text-black" />
-          <span>Platform Overview</span>
-        </h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 font-mono text-xs">
-          <div className="p-4 rounded-xl border border-slate-200 bg-white space-y-2 shadow-xs">
-            <span className="px-2 py-0.5 rounded bg-slate-100 border border-slate-200 text-[10px] text-slate-700 font-bold">
-              01
-            </span>
-            <h4 className="font-bold text-black uppercase">Easy-to-Use App</h4>
-            <p className="text-[11px] text-slate-600 font-sans">
-              A clean, fast interface that works on any device. No downloads needed — access your wallet from any browser.
+    <div className="space-y-8 font-sans max-w-5xl mx-auto pb-8">
+      {/* Hero Header */}
+      <div className="bg-white border border-[#EBE5DF] rounded-3xl p-6 sm:p-8 shadow-xs">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-[#F2ECE5]">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#FAF7F4] text-[#FF6651] border border-[#EBE5DF] uppercase tracking-wider">
+                Distributed Database Systems • Sir Umair
+              </span>
+              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#E5F7F3] text-[#00A389] border border-[#00A389]/20 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00A389] animate-pulse" />
+                ACID 2PC Verified
+              </span>
+            </div>
+            <h2 className="text-2xl font-black text-[#1A1D20] tracking-tight">
+              TransMoney Distributed System Architecture
+            </h2>
+            <p className="text-xs text-[#5F6773] mt-1">
+              Horizontally sharded shared-nothing ledger topology with Two-Phase Commit consensus, ordered row-locking, and immutable GAAP double-entry journals.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl border border-slate-200 bg-white space-y-2 shadow-xs">
-            <span className="px-2 py-0.5 rounded bg-slate-100 border border-slate-200 text-[10px] text-slate-700 font-bold">
-              02
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-[#FAF7F4] border border-[#EBE5DF] text-[#1A1D20] flex items-center gap-1.5">
+              <Server className="w-3.5 h-3.5 text-[#FF6651]" /> PostgreSQL 17 Multi-Shard
             </span>
-            <h4 className="font-bold text-black uppercase">Smart Routing</h4>
-            <p className="text-[11px] text-slate-600 font-sans">
-              Transfers are automatically routed through the fastest available path, keeping your money moving without delays.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl border border-slate-200 bg-white space-y-2 shadow-xs">
-            <span className="px-2 py-0.5 rounded bg-slate-100 border border-slate-200 text-[10px] text-slate-700 font-bold">
-              03
-            </span>
-            <h4 className="font-bold text-black uppercase">Transfer Engine</h4>
-            <p className="text-[11px] text-slate-600 font-sans">
-              Every transfer is processed with a guaranteed all-or-nothing mechanism — the money either arrives in full or is returned instantly.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl border border-slate-200 bg-white space-y-2 shadow-xs">
-            <span className="px-2 py-0.5 rounded bg-slate-100 border border-slate-200 text-[10px] text-slate-700 font-bold">
-              04
-            </span>
-            <h4 className="font-bold text-black uppercase">Fast Balance Updates</h4>
-            <p className="text-[11px] text-slate-600 font-sans">
-              Your balance refreshes immediately after every transfer, so you always see your real balance in real time.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl border border-slate-200 bg-white space-y-2 shadow-xs">
-            <span className="px-2 py-0.5 rounded bg-slate-100 border border-slate-200 text-[10px] text-slate-700 font-bold">
-              05
-            </span>
-            <h4 className="font-bold text-black uppercase">Conflict-Free Processing</h4>
-            <p className="text-[11px] text-slate-600 font-sans">
-              Multiple simultaneous transfers never interfere with each other. Every transaction is handled in strict order to prevent errors.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl border border-slate-200 bg-white space-y-2 shadow-xs">
-            <span className="px-2 py-0.5 rounded bg-slate-100 border border-slate-200 text-[10px] text-slate-700 font-bold">
-              06
-            </span>
-            <h4 className="font-bold text-black uppercase">Secure Storage</h4>
-            <p className="text-[11px] text-slate-600 font-sans">
-              All account data and transaction records are stored securely with full audit history. Nothing is ever deleted.
-            </p>
           </div>
         </div>
-      </div>
 
-      {/* How a Transfer Works */}
-      <div className="space-y-4">
-        <h3 className="text-sm font-bold text-black uppercase tracking-wider font-mono flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-black" />
-          <span>How Every Transfer Is Protected</span>
-        </h3>
-
-        <div className="p-5 rounded-xl border border-slate-200 bg-slate-50 font-mono text-xs space-y-4 shadow-xs">
-          <div className="flex items-start gap-3">
-            <span className="w-6 h-6 rounded bg-black text-white font-bold flex items-center justify-center shrink-0">
-              1
-            </span>
+        {/* Dynamic Architectural Layers Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-6">
+          <div className="p-5 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF] space-y-3">
+            <div className="w-9 h-9 rounded-xl bg-white border border-[#EBE5DF] flex items-center justify-center text-[#FF6651] shadow-xs">
+              <Cpu className="w-5 h-5" />
+            </div>
             <div>
-              <span className="text-black font-bold block uppercase">
-                Identity & Balance Check
-              </span>
-              <p className="text-[11px] text-slate-600 font-sans mt-0.5">
-                Before any money moves, we verify both accounts are active and the sender has enough balance. If anything looks wrong, the transfer is stopped immediately with no money moved.
+              <h4 className="text-sm font-black text-[#1A1D20]">Two-Phase Commit (2PC)</h4>
+              <p className="text-xs text-[#5F6773] mt-1 leading-relaxed">
+                Atomic cross-shard transaction coordinator executing Phase 1 (Prepare/Vote) and Phase 2 (Global Commit). Zero partial states.
               </p>
+            </div>
+            <div className="text-[11px] font-semibold text-[#FF6651] flex items-center gap-1 pt-1">
+              <span>Syllabus Weeks 9 & 10</span>
+              <ArrowRight className="w-3 h-3" />
             </div>
           </div>
 
-          <div className="flex items-start gap-3">
-            <span className="w-6 h-6 rounded bg-black text-white font-bold flex items-center justify-center shrink-0">
-              2
-            </span>
+          <div className="p-5 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF] space-y-3">
+            <div className="w-9 h-9 rounded-xl bg-white border border-[#EBE5DF] flex items-center justify-center text-[#00A389] shadow-xs">
+              <Database className="w-5 h-5" />
+            </div>
             <div>
-              <span className="text-black font-bold block uppercase">
-                Transfer Authorization
-              </span>
-              <p className="text-[11px] text-slate-600 font-sans mt-0.5">
-                All systems confirm they are ready to receive and process the transfer. If any system is unavailable, the transfer is held until everything is confirmed — no partial transfers allowed.
+              <h4 className="text-sm font-black text-[#1A1D20]">Horizontal Fragmentation</h4>
+              <p className="text-xs text-[#5F6773] mt-1 leading-relaxed">
+                Accounts and ledgers physically partitioned across 4 regional shards (North, Central, South, Enterprise) and international nodes.
               </p>
+            </div>
+            <div className="text-[11px] font-semibold text-[#00A389] flex items-center gap-1 pt-1">
+              <span>Syllabus Weeks 2 & 4</span>
+              <ArrowRight className="w-3 h-3" />
             </div>
           </div>
 
-          <div className="flex items-start gap-3">
-            <span className="w-6 h-6 rounded bg-black text-white font-bold flex items-center justify-center shrink-0">
-              3
-            </span>
+          <div className="p-5 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF] space-y-3">
+            <div className="w-9 h-9 rounded-xl bg-white border border-[#EBE5DF] flex items-center justify-center text-[#1A1D20] shadow-xs">
+              <Lock className="w-5 h-5" />
+            </div>
             <div>
-              <span className="text-black font-bold block uppercase">
-                Instant Completion & Record
-              </span>
-              <p className="text-[11px] text-slate-600 font-sans mt-0.5">
-                Once confirmed, the sender's balance is reduced and the recipient's balance is increased simultaneously. A permanent record is created for both sides — every PKR is always accounted for.
+              <h4 className="text-sm font-black text-[#1A1D20]">Deadlock-Free Locking</h4>
+              <p className="text-xs text-[#5F6773] mt-1 leading-relaxed">
+                Deterministic hierarchical locking (<code className="text-[#FF6651] font-mono">min(id) &rarr; max(id)</code>) mathematically guarantees elimination of circular-wait deadlocks.
               </p>
+            </div>
+            <div className="text-[11px] font-semibold text-[#1A1D20] flex items-center gap-1 pt-1">
+              <span>Syllabus Week 12</span>
+              <ArrowRight className="w-3 h-3" />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Regional Hubs Table */}
-      <div className="space-y-4">
-        <h3 className="text-sm font-bold text-black uppercase tracking-wider font-mono flex items-center gap-2">
-          <Globe className="w-4 h-4 text-black" />
-          <span>Regional Shard Topology & Partition Routing</span>
-        </h3>
+      {/* Visual Consensus Stepper */}
+      <div className="bg-white border border-[#EBE5DF] rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
+        <div className="flex items-center justify-between pb-4 border-b border-[#F2ECE5]">
+          <div className="flex items-center gap-2">
+            <span className="p-1.5 rounded-lg bg-[#FAF7F4] text-[#FF6651] border border-[#EBE5DF]">
+              <GitMerge className="w-4 h-4" />
+            </span>
+            <h3 className="text-base font-black text-[#1A1D20] tracking-tight">
+              Life of a Cross-Shard Transfer (2PC Consensus Lifecycle)
+            </h3>
+          </div>
+          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#FAF7F4] border border-[#EBE5DF] text-[#5F6773]">
+            Sub-millisecond latency
+          </span>
+        </div>
 
-        <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white font-mono text-xs shadow-xs">
-          <table className="w-full text-left">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 uppercase text-[10px]">
-              <tr>
-                <th className="py-2.5 px-3">Shard Partition</th>
-                <th className="py-2.5 px-3">Regional Hub</th>
-                <th className="py-2.5 px-3">Database Target</th>
-                <th className="py-2.5 px-3">2PC Coordinator</th>
-                <th className="py-2.5 px-3 text-right">Consensus SLA</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              <tr>
-                <td className="py-2.5 px-3 font-bold text-black">SHARD_1_NORTH</td>
-                <td className="py-2.5 px-3 text-slate-600">North Hub (Islamabad / KPK)</td>
-                <td className="py-2.5 px-3 text-black">Partition Cluster Alpha</td>
-                <td className="py-2.5 px-3 text-emerald-700 font-semibold">Active Leader</td>
-                <td className="py-2.5 px-3 text-right font-bold text-black">&lt; 12ms</td>
-              </tr>
-              <tr>
-                <td className="py-2.5 px-3 font-bold text-black">SHARD_2_CENTRAL</td>
-                <td className="py-2.5 px-3 text-slate-600">Central Hub (Lahore / Punjab)</td>
-                <td className="py-2.5 px-3 text-black">Partition Cluster Beta</td>
-                <td className="py-2.5 px-3 text-emerald-700 font-semibold">Active Leader</td>
-                <td className="py-2.5 px-3 text-right font-bold text-black">&lt; 10ms</td>
-              </tr>
-              <tr>
-                <td className="py-2.5 px-3 font-bold text-black">SHARD_3_SOUTH</td>
-                <td className="py-2.5 px-3 text-slate-600">South Hub (Karachi / Sindh)</td>
-                <td className="py-2.5 px-3 text-black">Partition Cluster Gamma</td>
-                <td className="py-2.5 px-3 text-emerald-700 font-semibold">Active Leader</td>
-                <td className="py-2.5 px-3 text-right font-bold text-black">&lt; 14ms</td>
-              </tr>
-              <tr>
-                <td className="py-2.5 px-3 font-bold text-black">SHARD_4_ENTERPRISE</td>
-                <td className="py-2.5 px-3 text-slate-600">Enterprise & Global Clearing</td>
-                <td className="py-2.5 px-3 text-black">Partition Cluster Delta</td>
-                <td className="py-2.5 px-3 text-emerald-700 font-semibold">Active Leader</td>
-                <td className="py-2.5 px-3 text-right font-bold text-black">&lt; 8ms</td>
-              </tr>
-            </tbody>
-          </table>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="p-4 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF] space-y-2 relative">
+            <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#1A1D20] text-white">
+              STEP 1
+            </span>
+            <h5 className="text-xs font-bold text-[#1A1D20]">Initiate &amp; Idempotency</h5>
+            <p className="text-[11px] text-[#5F6773] leading-relaxed">
+              Client submits transfer with UUID <code className="text-[#1A1D20]">X-Idempotency-Key</code>. Deduplication layer checks for prior execution.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF] space-y-2">
+            <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#FF6651] text-white">
+              STEP 2
+            </span>
+            <h5 className="text-xs font-bold text-[#1A1D20]">Ordered Row Locks</h5>
+            <p className="text-[11px] text-[#5F6773] leading-relaxed">
+              Coordinator acquires pessimistic write locks on both accounts in strictly ascending ID order to eliminate deadlock loops.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF] space-y-2">
+            <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#00A389] text-white">
+              STEP 3
+            </span>
+            <h5 className="text-xs font-bold text-[#1A1D20]">Phase 1: Prepare (Vote)</h5>
+            <p className="text-[11px] text-[#5F6773] leading-relaxed">
+              Validates sender balance, FX exchange rates, and active account status across regional shards. All participants vote <code className="text-[#00A389]">COMMIT</code>.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF] space-y-2">
+            <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#00A389] text-white">
+              STEP 4
+            </span>
+            <h5 className="text-xs font-bold text-[#1A1D20]">Phase 2: Global Commit</h5>
+            <p className="text-[11px] text-[#5F6773] leading-relaxed">
+              Balances update atomically, immutable GAAP double-entry journal records write, Redis cache evicts, and events stream via WebSocket.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Mathematical & Academic Attribution Card */}
+      <div className="bg-[#1A1D20] text-white rounded-3xl p-6 sm:p-8 shadow-md border border-neutral-800 space-y-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-neutral-800">
+          <div>
+            <h4 className="text-base font-black tracking-tight text-white flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5 text-[#00A389]" />
+              <span>Academic Specification &amp; Evaluation Matrix</span>
+            </h4>
+            <p className="text-xs text-neutral-400 mt-0.5">
+              University of Karachi • UBIT • Distributed Database Systems (Sir Umair)
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="px-3 py-1 rounded-full text-xs font-mono bg-white/10 text-neutral-300 border border-white/15">
+              Scale Target: 50,000,000 Data
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs pt-1">
+          <div className="p-3.5 rounded-xl bg-neutral-900/80 border border-neutral-800 space-y-1">
+            <span className="text-[10px] font-mono uppercase text-neutral-400 block">Lead Architect</span>
+            <span className="font-bold text-white block">Shehzad Nisar</span>
+            <span className="text-[11px] font-mono text-[#FF6651]">B22110006147</span>
+          </div>
+
+          <div className="p-3.5 rounded-xl bg-neutral-900/80 border border-neutral-800 space-y-1">
+            <span className="text-[10px] font-mono uppercase text-neutral-400 block">Backend &amp; Database Lead</span>
+            <span className="font-bold text-white block">Muhammad Ashraf</span>
+            <span className="text-[11px] font-mono text-[#00A389]">B22110006090</span>
+          </div>
+
+          <div className="p-3.5 rounded-xl bg-neutral-900/80 border border-neutral-800 space-y-1">
+            <span className="text-[10px] font-mono uppercase text-neutral-400 block">Frontend &amp; Integration Lead</span>
+            <span className="font-bold text-white block">Daniyal Ahmed</span>
+            <span className="text-[11px] font-mono text-amber-400">B21110006024</span>
+          </div>
         </div>
       </div>
     </div>
