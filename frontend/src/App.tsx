@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Header, type AppTab } from './components/Header';
+import type { AppTab } from './components/Header';
+import { DashboardLayout } from './components/DashboardLayout';
 import { WalletHome } from './components/WalletHome';
 import { TransferConsole } from './components/TransferConsole';
 import { TransactionHistory } from './components/TransactionHistory';
@@ -246,25 +247,22 @@ export function App() {
           onSelectAccount={(id) => setSelectedAccountId(id)}
         />
       ) : (
-        <>
-          {/* Universal Clean FinTech Header */}
-          <Header
-            health={health}
-            currentUser={currentUser}
-            userAccounts={currentUserAccounts}
-            activeAccountId={selectedAccountId}
-            onSelectAccount={(id) => setSelectedAccountId(id)}
-            onOpenAuth={(mode) => {
-              setAuthModalMode(mode);
-              setAuthModalOpen(true);
-            }}
-            onOpenCreateAccount={() => setCreateAccountModalOpen(true)}
-            onLogout={handleLogout}
-            activeTab={activeTab}
-            setActiveTab={handleNavigateTab}
-          />
-
-          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-8">
+        <DashboardLayout
+          health={health}
+          currentUser={currentUser}
+          accounts={accounts}
+          userAccounts={currentUserAccounts}
+          activeAccountId={selectedAccountId}
+          onSelectAccount={(id) => setSelectedAccountId(id)}
+          onOpenAuth={(mode) => {
+            setAuthModalMode(mode);
+            setAuthModalOpen(true);
+          }}
+          onOpenCreateAccount={() => setCreateAccountModalOpen(true)}
+          onLogout={handleLogout}
+          activeTab={activeTab}
+          setActiveTab={handleNavigateTab}
+        >
           {initialLoading ? (
             <div className="flex flex-col items-center justify-center py-24 text-slate-400 space-y-3 font-mono">
               <RefreshCw className="w-7 h-7 animate-spin text-[#FF6651]" />
@@ -276,165 +274,113 @@ export function App() {
             <>
               {/* View 1: Main Wallet Dashboard (SadaPay & Wise Neobank Model) */}
               {activeTab === 'console' && (
-              <WalletHome
-                accounts={accounts}
-                currentUser={currentUser}
-                selectedAccountId={selectedAccountId}
-                onSelectAccount={(id) => setSelectedAccountId(id)}
-                onOpenDeposit={() => {
-                  setDepositModalMode('deposit');
-                  setDepositModalOpen(true);
-                }}
-                onOpenWithdraw={() => {
-                  setDepositModalMode('withdraw');
-                  setDepositModalOpen(true);
-                }}
-                onOpenCreateAccount={() => setCreateAccountModalOpen(true)}
-                onNavigateTab={(tab) => {
-                  if (tab === 'transfer') handleNavigateTab('transfer');
-                  else if (tab === 'merchant') handleNavigateTab('merchant');
-                  else if (tab === 'exchange') handleNavigateTab('exchange');
-                  else if (tab === 'ledger') handleNavigateTab('ledger');
-                  else if (tab === 'core') handleNavigateTab('core');
-                }}
-                onStatusToggle={handleStatusToggle}
-                refreshTrigger={refreshTrigger}
-              />
-            )}
-
-            {/* View 2: Send Money (Frictionless Consumer Transfer Flow) */}
-            {activeTab === 'transfer' && (
-              <div className="space-y-6">
-                <TransferConsole
+                <WalletHome
                   accounts={accounts}
                   currentUser={currentUser}
-                  activeAccountId={selectedAccountId}
-                  onTransferComplete={handleTransferComplete}
-                  onNavigateDashboard={() => handleNavigateTab('console')}
-                  onOpenAuth={(mode) => {
-                    setAuthModalMode(mode);
-                    setAuthModalOpen(true);
-                  }}
-                />
-              </div>
-            )}
-
-            {/* View 3: Merchant Services & QR Code Payments */}
-            {activeTab === 'merchant' && (
-              <MerchantPortal
-                currentUser={currentUser}
-                accounts={accounts}
-                activeAccountId={selectedAccountId}
-                onRefreshData={fetchData}
-              />
-            )}
-
-            {/* View 4: Official Statements & Double-Entry Ledger */}
-            {activeTab === 'ledger' && (
-              <div className="space-y-6">
-                <AuditorDashboard
-                  accounts={accounts}
                   selectedAccountId={selectedAccountId}
+                  onSelectAccount={(id) => setSelectedAccountId(id)}
+                  onOpenDeposit={() => {
+                    setDepositModalMode('deposit');
+                    setDepositModalOpen(true);
+                  }}
+                  onOpenWithdraw={() => {
+                    setDepositModalMode('withdraw');
+                    setDepositModalOpen(true);
+                  }}
+                  onOpenCreateAccount={() => setCreateAccountModalOpen(true)}
+                  onNavigateTab={(tab) => {
+                    if (tab === 'transfer') handleNavigateTab('transfer');
+                    else if (tab === 'merchant') handleNavigateTab('merchant');
+                    else if (tab === 'exchange') handleNavigateTab('exchange');
+                    else if (tab === 'ledger') handleNavigateTab('ledger');
+                    else if (tab === 'core') handleNavigateTab('core');
+                  }}
+                  onStatusToggle={handleStatusToggle}
                   refreshTrigger={refreshTrigger}
                 />
+              )}
 
-                <div className="pt-4 border-t border-[#EBE5DF]">
-                  <div className="mb-4">
-                    <h3 className="text-base font-bold text-[#1A1D20]">
-                      Account Statement &amp; Transaction History
-                    </h3>
-                    <p className="text-xs text-[#5F6773]">
-                      Search, filter, and inspect verified transaction records across all regional nodes
-                    </p>
-                  </div>
-                  <TransactionHistory
+              {/* View 2: Send Money (Frictionless Consumer Transfer Flow) */}
+              {activeTab === 'transfer' && (
+                <div className="space-y-6">
+                  <TransferConsole
+                    accounts={accounts}
+                    currentUser={currentUser}
+                    activeAccountId={selectedAccountId}
+                    onTransferComplete={handleTransferComplete}
+                    onNavigateDashboard={() => handleNavigateTab('console')}
+                    onOpenAuth={(mode) => {
+                      setAuthModalMode(mode);
+                      setAuthModalOpen(true);
+                    }}
+                  />
+                </div>
+              )}
+
+              {/* View 3: Merchant Services & QR Code Payments */}
+              {activeTab === 'merchant' && (
+                <MerchantPortal
+                  currentUser={currentUser}
+                  accounts={accounts}
+                  activeAccountId={selectedAccountId}
+                  onRefreshData={fetchData}
+                />
+              )}
+
+              {/* View 4: Official Statements & Double-Entry Ledger */}
+              {activeTab === 'ledger' && (
+                <div className="space-y-6">
+                  <AuditorDashboard
                     accounts={accounts}
                     selectedAccountId={selectedAccountId}
                     refreshTrigger={refreshTrigger}
                   />
+
+                  <div className="pt-4 border-t border-[#EBE5DF]">
+                    <div className="mb-4">
+                      <h3 className="text-base font-bold text-[#1A1D20]">
+                        Account Statement &amp; Transaction History
+                      </h3>
+                      <p className="text-xs text-[#5F6773]">
+                        Search, filter, and inspect verified transaction records across all regional nodes
+                      </p>
+                    </div>
+                    <TransactionHistory
+                      accounts={accounts}
+                      selectedAccountId={selectedAccountId}
+                      refreshTrigger={refreshTrigger}
+                    />
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* View 5: Multi-Currency & Cross-Border Exchange Engine */}
-            {activeTab === 'exchange' && (
-              <CurrencyExchange
-                accounts={accounts}
-                currentUser={currentUser}
-                onExchangeComplete={() => {
-                  fetchData();
-                  setRefreshTrigger((prev) => prev + 1);
-                }}
-              />
-            )}
+              {/* View 5: Multi-Currency & Cross-Border Exchange Engine */}
+              {activeTab === 'exchange' && (
+                <CurrencyExchange
+                  accounts={accounts}
+                  currentUser={currentUser}
+                  onExchangeComplete={() => {
+                    fetchData();
+                    setRefreshTrigger((prev) => prev + 1);
+                  }}
+                />
+              )}
 
-            {/* View 6: Core Banking & Distributed Infrastructure (Enterprise Console) */}
-            {activeTab === 'core' && (
-              <CoreBankingConsole
-                health={health}
-                accounts={accounts}
-                selectedAccountId={selectedAccountId}
-                currentUser={currentUser}
-                onSelectAccount={(id) => setSelectedAccountId(id)}
-                onOpenCreateAccount={() => setCreateAccountModalOpen(true)}
-                onRefreshData={fetchData}
-              />
-            )}
+              {/* View 6: Core Banking & Distributed Infrastructure (Enterprise Console) */}
+              {activeTab === 'core' && (
+                <CoreBankingConsole
+                  health={health}
+                  accounts={accounts}
+                  selectedAccountId={selectedAccountId}
+                  currentUser={currentUser}
+                  onSelectAccount={(id) => setSelectedAccountId(id)}
+                  onOpenCreateAccount={() => setCreateAccountModalOpen(true)}
+                  onRefreshData={fetchData}
+                />
+              )}
             </>
           )}
-        </main>
-
-      {/* Global Clean FinTech Footer */}
-      <footer className="border-t border-[#EBE5DF] bg-[#FAF7F4] py-6 text-center text-xs text-[#5F6773] font-sans">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="font-extrabold text-[#1A1D20]">TransMoney</span>
-            <span>•</span>
-            <span>Next-Generation Multi-Currency Digital Wallet</span>
-          </div>
-          <div className="flex items-center gap-4 text-[#4B5563]">
-            <button
-              onClick={() => handleNavigateTab('landing')}
-              className="hover:text-[#1A1D20] cursor-pointer text-[#FF6651] font-semibold"
-            >
-              Overview
-            </button>
-            <button
-              onClick={() => handleNavigateTab('console')}
-              className="hover:text-[#1A1D20] cursor-pointer font-medium"
-            >
-              Dashboard
-            </button>
-            <button
-              onClick={() => handleNavigateTab('transfer')}
-              className="hover:text-[#1A1D20] cursor-pointer font-medium"
-            >
-              Send Money
-            </button>
-            <button
-              onClick={() => handleNavigateTab('merchant')}
-              className="hover:text-[#1A1D20] cursor-pointer font-medium"
-            >
-              Merchants
-            </button>
-            <button
-              onClick={() => handleNavigateTab('core')}
-              className="hover:text-[#1A1D20] cursor-pointer font-mono text-[11px]"
-            >
-              Core Banking
-            </button>
-            <a
-              href="http://localhost:8080/swagger-ui/index.html"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-[#1A1D20] font-mono text-[11px]"
-            >
-              API Docs
-            </a>
-          </div>
-        </div>
-      </footer>
-      </>
+        </DashboardLayout>
       )}
 
       {/* Modals */}
