@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, X, Globe } from 'lucide-react';
+import { X, Globe, ArrowRight, RefreshCw, ShieldCheck } from 'lucide-react';
 import { createAccount } from '../api/client';
 import type { Account, ShardType, User } from '../types';
 
@@ -84,40 +84,43 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs font-sans">
-      <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden text-black max-h-[90vh] flex flex-col">
-        <div className="flex items-center justify-between p-5 border-b border-slate-200 shrink-0">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs font-sans">
+      <div className="bg-white border border-[#EBE5DF] rounded-[32px] w-full max-w-lg shadow-2xl overflow-hidden text-[#1A1D20] animate-in fade-in zoom-in-95 duration-200">
+        
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 pb-4 border-b border-[#F2ECE5]">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-[#E5F7F3] text-[#00A389] border border-[#00A389]/25 flex items-center justify-center shadow-xs">
               <Globe className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-black uppercase tracking-tight">
+              <h3 className="text-base font-black text-[#1A1D20] tracking-tight">
                 Open Multi-Currency Account
               </h3>
-              <p className="text-xs text-slate-500 font-mono">
-                Account Owner: {currentUser.fullName}
+              <p className="text-xs text-[#5F6773]">
+                Account Owner: <strong className="text-[#1A1D20]">{currentUser.fullName}</strong>
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded text-slate-400 hover:text-black hover:bg-slate-100 transition cursor-pointer"
+            className="w-9 h-9 rounded-full bg-[#FAF7F4] hover:bg-[#F2ECE5] text-[#5F6773] hover:text-[#1A1D20] flex items-center justify-center transition cursor-pointer"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto">
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {errorMsg && (
-            <div className="p-3 rounded-lg border border-rose-300 bg-rose-50 text-xs text-rose-800 font-mono">
-              {errorMsg}
+            <div className="p-3.5 rounded-2xl bg-[#FFEAE5] border border-[#FF6651]/20 text-xs text-[#FF6651] font-bold flex items-center gap-2">
+              <span>⚠️</span>
+              <span>{errorMsg}</span>
             </div>
           )}
 
           {/* Currency Selection */}
           <div>
-            <label className="text-[11px] font-mono uppercase text-slate-600 block mb-1.5 font-bold">
+            <label className="text-[11px] font-bold uppercase tracking-wider text-[#5F6773] block mb-1.5">
               Account Currency Portfolio *
             </label>
             <div className="grid grid-cols-5 gap-2">
@@ -126,81 +129,95 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
                   key={c.code}
                   type="button"
                   onClick={() => handleCurrencyChange(c.code)}
-                  className={`p-2 rounded-xl border text-center transition cursor-pointer flex flex-col items-center gap-1 ${
+                  className={`p-2.5 rounded-2xl border text-center transition cursor-pointer flex flex-col items-center gap-0.5 ${
                     currency === c.code
-                      ? 'border-black bg-slate-900 text-white shadow-xs'
-                      : 'border-slate-200 bg-white hover:border-slate-400 text-slate-700'
+                      ? 'border-[#1A1D20] bg-[#1A1D20] text-white shadow-xs'
+                      : 'border-[#EBE5DF] bg-[#FAF7F4] hover:bg-white text-[#1A1D20]'
                   }`}
                 >
-                  <span className="text-base">{c.flag}</span>
-                  <span className="text-xs font-bold font-mono">{c.code}</span>
-                  <span className="text-[10px] opacity-75">{c.symbol}</span>
+                  <span className="text-lg">{c.flag}</span>
+                  <span className="text-xs font-black">{c.code}</span>
+                  <span className={`text-[10px] ${currency === c.code ? 'text-white/70' : 'text-[#5F6773]'}`}>
+                    {c.symbol}
+                  </span>
                 </button>
               ))}
             </div>
           </div>
 
-          <div>
-            <label className="text-[11px] font-mono uppercase text-slate-600 block mb-1 font-bold">
-              Account Identifier (IBAN / ID) *
-            </label>
-            <input
-              type="text"
-              required
-              value={accountNumber}
-              onChange={(e) => setAccountNumber(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-black text-xs font-mono uppercase focus:outline-none focus:border-black transition"
-            />
+          {/* Account Identifier & Initial Deposit (2-column grid) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="text-[11px] font-bold uppercase tracking-wider text-[#5F6773] block mb-1">
+                Account Number (IBAN / ID) *
+              </label>
+              <input
+                type="text"
+                required
+                value={accountNumber}
+                onChange={(e) => setAccountNumber(e.target.value)}
+                className="w-full px-3.5 py-2.5 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF] text-[#1A1D20] text-xs font-mono font-bold uppercase focus:outline-none focus:border-[#FF6651] focus:bg-white transition"
+              />
+            </div>
+
+            <div>
+              <label className="text-[11px] font-bold uppercase tracking-wider text-[#5F6773] block mb-1">
+                Initial Deposit ({currency}) *
+              </label>
+              <input
+                type="number"
+                min="0"
+                step="10"
+                required
+                value={initialBalance}
+                onChange={(e) => setInitialBalance(e.target.value)}
+                className="w-full px-3.5 py-2.5 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF] text-[#1A1D20] text-xs font-mono font-bold focus:outline-none focus:border-[#FF6651] focus:bg-white transition"
+              />
+            </div>
           </div>
 
+          {/* Shard Selection (Clean Dropdown - Eliminates Awkward Scrollbar) */}
           <div>
-            <label className="text-[11px] font-mono uppercase text-slate-600 block mb-1 font-bold">
-              Initial Deposit ({currency}) *
-            </label>
-            <input
-              type="number"
-              min="0"
-              step="10"
-              required
-              value={initialBalance}
-              onChange={(e) => setInitialBalance(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-black text-xs font-mono focus:outline-none focus:border-black transition"
-            />
-          </div>
-
-          <div>
-            <label className="text-[11px] font-mono uppercase text-slate-600 block mb-1 font-bold">
-              Regional Shard Cluster Node *
-            </label>
-            <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-[11px] font-bold uppercase tracking-wider text-[#5F6773]">
+                Regional Shard Routing Node *
+              </label>
+              <span className="text-[10px] text-[#00A389] font-bold flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3" />
+                <span>Auto-routed by Currency</span>
+              </span>
+            </div>
+            <select
+              value={shard}
+              onChange={(e) => setShard(e.target.value as ShardType)}
+              className="w-full px-3.5 py-2.5 rounded-2xl bg-[#FAF7F4] border border-[#EBE5DF] text-xs font-bold text-[#1A1D20] focus:outline-none focus:border-[#FF6651] focus:bg-white transition cursor-pointer"
+            >
               {SHARD_OPTIONS.map((opt) => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  onClick={() => setShard(opt.value)}
-                  className={`w-full p-2.5 rounded-lg border text-left transition cursor-pointer flex items-center justify-between ${
-                    shard === opt.value
-                      ? 'border-black bg-slate-50 text-black font-semibold'
-                      : 'border-slate-200 bg-white text-slate-700 hover:border-slate-400'
-                  }`}
-                >
-                  <div>
-                    <span className="text-xs font-bold font-mono block">{opt.label}</span>
-                    <span className="text-[10px] text-slate-500 block">{opt.desc}</span>
-                  </div>
-                  {shard === opt.value && <Check className="w-4 h-4 text-black shrink-0" />}
-                </button>
+                <option key={opt.value} value={opt.value}>
+                  {opt.label} — {opt.desc}
+                </option>
               ))}
-            </div>
+            </select>
           </div>
 
+          {/* Submit Button */}
           <div className="pt-2">
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 rounded-lg bg-black text-white hover:bg-slate-800 font-semibold text-xs uppercase tracking-wider transition disabled:opacity-50 cursor-pointer shadow-xs"
+              className="w-full py-3.5 px-4 rounded-full bg-[#FF6651] hover:bg-[#E54D34] active:scale-95 text-white font-black text-sm flex items-center justify-center gap-2 shadow-md shadow-[#FF6651]/25 transition disabled:opacity-50 cursor-pointer"
             >
-              {loading ? 'Creating...' : `Open ${currency} Sharded Account`}
+              {loading ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <span>Provisioning Shard Account...</span>
+                </>
+              ) : (
+                <>
+                  <span>Open {currency} Sharded Account</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
           </div>
         </form>
