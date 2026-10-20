@@ -11,6 +11,10 @@ import {
   ArrowUpRight,
   Database,
   Layers,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
 } from 'lucide-react';
 import type { Account, LedgerEntryResponse, ReconciliationResponse } from '../types';
 import {
@@ -42,6 +46,8 @@ export const AuditorDashboard: React.FC<AuditorDashboardProps> = ({
   const [downloading, setDownloading] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(15);
 
   // Sync selectedAccId when prop changes
   useEffect(() => {
@@ -103,6 +109,11 @@ export const AuditorDashboard: React.FC<AuditorDashboardProps> = ({
     }
   };
 
+  // Reset pagination when filter/search/account changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedAccId, streamFilter, searchTerm, pageSize]);
+
   const selectedAccount = accounts.find((a) => a.id === selectedAccId);
 
   const filteredEntries = entries.filter((e) => {
@@ -115,6 +126,27 @@ export const AuditorDashboard: React.FC<AuditorDashboardProps> = ({
       e.amount.toString().includes(term)
     );
   });
+
+  // Pagination calculation
+  const totalEntries = filteredEntries.length;
+  const totalPages = Math.max(1, Math.ceil(totalEntries / pageSize));
+  const validCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
+  const startIndex = (validCurrentPage - 1) * pageSize;
+  const endIndex = Math.min(startIndex + pageSize, totalEntries);
+  const paginatedEntries = filteredEntries.slice(startIndex, endIndex);
+
+  const getPageNumbers = (current: number, total: number) => {
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+    if (current <= 3) {
+      return [1, 2, 3, 4, '...', total];
+    }
+    if (current >= total - 2) {
+      return [1, '...', total - 3, total - 2, total - 1, total];
+    }
+    return [1, '...', current - 1, current, current + 1, '...', total];
+  };
 
   return (
     <div className="space-y-6 font-sans">
@@ -180,7 +212,7 @@ export const AuditorDashboard: React.FC<AuditorDashboardProps> = ({
             >
               {accounts.map((acc) => (
                 <option key={acc.id} value={acc.id}>
-                  {acc.accountNumber} ({acc.shard}) - {acc.currency} {Number(acc.balance).toLocaleString()}
+                  {acc.accountNumber} ({acc.user?.fullName || `Account #${acc.id}`}) — {acc.currency} {Number(acc.balance).toLocaleString()}
                 </option>
               ))}
             </select>
@@ -192,9 +224,11 @@ export const AuditorDashboard: React.FC<AuditorDashboardProps> = ({
                 <span className="text-[#5F6773]">Account Holder:</span>
                 <span className="text-[#1A1D20] font-bold">{selectedAccount.user?.fullName || 'N/A'}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-[#5F6773]">Assigned Shard:</span>
-                <span className="text-[#1A1D20] font-mono text-[11px] font-semibold">{selectedAccount.shard}</span>
+              <div className="flex justify-between items-center">
+                <span className="text-[#5F6773]">Assigned Node:</span>
+                <span className="px-2 py-0.5 rounded-full bg-[#E5F7F3] text-[#00A389] font-mono text-[10px] font-bold">
+                  {selectedAccount.shard}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-[#5F6773]">Recorded Balance:</span>
@@ -312,7 +346,26 @@ export const AuditorDashboard: React.FC<AuditorDashboardProps> = ({
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Rows Per Page Selector */}
+            <div className="flex items-center gap-1.5 text-xs text-[#5F6773]">
+              <span>Rows:</span>
+              <select
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                className="px-2 py-1 rounded-xl border border-[#EBE5DF] bg-[#FAF7F4] text-xs font-bold text-[#1A1D20] focus:outline-none focus:border-[#FF6651] cursor-pointer"
+              >
+                <option value={10}>10</option>
+                <option value={15}>15</option>
+                <option value={25}>25</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
+            </div>
+
             {/* Stream Filter Toggle */}
             <div className="flex rounded-xl border border-[#EBE5DF] p-1 bg-[#FAF7F4] text-xs">
               <button
@@ -366,14 +419,14 @@ export const AuditorDashboard: React.FC<AuditorDashboardProps> = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-[#F2ECE5]">
-              {filteredEntries.length === 0 ? (
+              {paginatedEntries.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="px-4 py-10 text-center text-[#9CA3AF]">
                     {loading ? 'Loading ledger stream...' : 'No ledger entries found.'}
                   </td>
                 </tr>
               ) : (
-                filteredEntries.map((entry) => (
+                paginatedEntries.map((entry) => (
                   <tr key={entry.id} className="hover:bg-[#FAF7F4] transition">
                     <td className="px-4 py-3 text-[#9CA3AF] font-mono">#{entry.id}</td>
                     <td className="px-4 py-3 font-mono text-[#1A1D20] text-[11px] font-semibold">
@@ -419,6 +472,86 @@ export const AuditorDashboard: React.FC<AuditorDashboardProps> = ({
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Controls */}
+        {totalEntries > 0 && (
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-[#F2ECE5] text-xs text-[#5F6773]">
+            <div>
+              Showing <strong className="text-[#1A1D20]">{startIndex + 1}</strong> to{' '}
+              <strong className="text-[#1A1D20]">{endIndex}</strong> of{' '}
+              <strong className="text-[#1A1D20]">{totalEntries}</strong> entries
+              {totalPages > 1 && (
+                <span className="ml-1.5 text-[11px] text-[#9CA3AF]">
+                  (Page {validCurrentPage} of {totalPages})
+                </span>
+              )}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  disabled={validCurrentPage === 1}
+                  onClick={() => setCurrentPage(1)}
+                  className="p-1.5 rounded-xl border border-[#EBE5DF] bg-[#FAF7F4] hover:bg-white text-[#1A1D20] disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+                  title="First Page"
+                >
+                  <ChevronsLeft className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  disabled={validCurrentPage === 1}
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  className="px-2.5 py-1.5 rounded-xl border border-[#EBE5DF] bg-[#FAF7F4] hover:bg-white text-[#1A1D20] font-medium disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer flex items-center gap-1"
+                >
+                  <ChevronLeft className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Prev</span>
+                </button>
+
+                {/* Page Number Buttons */}
+                <div className="flex items-center gap-1 px-1">
+                  {getPageNumbers(validCurrentPage, totalPages).map((p, idx) =>
+                    p === '...' ? (
+                      <span key={`ellipsis-${idx}`} className="px-1 text-[#9CA3AF]">...</span>
+                    ) : (
+                      <button
+                        key={`page-${p}`}
+                        type="button"
+                        onClick={() => setCurrentPage(Number(p))}
+                        className={`w-7 h-7 rounded-xl text-xs font-bold transition cursor-pointer flex items-center justify-center ${
+                          validCurrentPage === p
+                            ? 'bg-[#FF6651] text-white shadow-xs'
+                            : 'bg-[#FAF7F4] hover:bg-white text-[#1A1D20] border border-[#EBE5DF]'
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    )
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  disabled={validCurrentPage === totalPages}
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  className="px-2.5 py-1.5 rounded-xl border border-[#EBE5DF] bg-[#FAF7F4] hover:bg-white text-[#1A1D20] font-medium disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer flex items-center gap-1"
+                >
+                  <span className="hidden sm:inline">Next</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  disabled={validCurrentPage === totalPages}
+                  onClick={() => setCurrentPage(totalPages)}
+                  className="p-1.5 rounded-xl border border-[#EBE5DF] bg-[#FAF7F4] hover:bg-white text-[#1A1D20] disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+                  title="Last Page"
+                >
+                  <ChevronsRight className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

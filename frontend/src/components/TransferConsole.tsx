@@ -309,8 +309,8 @@ export const TransferConsole: React.FC<TransferConsoleProps> = ({
                     <span className="text-xs font-bold text-[#1A1D20] block">
                       {userAccounts[0].accountNumber} ({userAccounts[0].currency} Wallet)
                     </span>
-                    <span className="text-[11px] text-[#5F6773] font-mono">
-                      {userAccounts[0].shard}
+                    <span className="text-[11px] text-[#5F6773]">
+                      Primary Active Account
                     </span>
                   </div>
                   <div className="text-right">
@@ -344,7 +344,7 @@ export const TransferConsole: React.FC<TransferConsoleProps> = ({
                   <span>
                     Available Balance: <strong className="text-[#00A389]">{Number(sender.balance).toLocaleString()} {sender.currency}</strong>
                   </span>
-                  <span className="text-[11px] font-mono text-[#9CA3AF]">{sender.shard}</span>
+                  <span className="text-[11px] font-bold text-[#1A1D20]">{sender.currency} Wallet</span>
                 </div>
               )}
             </div>
@@ -413,7 +413,7 @@ export const TransferConsole: React.FC<TransferConsoleProps> = ({
                         </span>
                       </div>
                       <span className="text-[11px] text-[#5F6773] font-mono">
-                        {receiver.accountNumber} • {receiver.currency} • {receiver.shard}
+                        {receiver.accountNumber} • {receiver.currency} Account
                       </span>
                     </div>
                   </div>

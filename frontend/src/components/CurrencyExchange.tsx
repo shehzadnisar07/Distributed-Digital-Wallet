@@ -308,7 +308,7 @@ export const CurrencyExchange: React.FC<CurrencyExchangeProps> = ({
               >
                 {accounts.map((a) => (
                   <option key={a.id} value={a.id}>
-                    {a.accountNumber} ({a.currency}) - Bal: {Number(a.balance).toFixed(2)} [{a.shard}]
+                    {a.accountNumber} ({a.user?.fullName || `${a.currency} Wallet`}) — Bal: {Number(a.balance).toFixed(2)} {a.currency}
                   </option>
                 ))}
               </select>
@@ -336,7 +336,7 @@ export const CurrencyExchange: React.FC<CurrencyExchangeProps> = ({
               >
                 {accounts.map((a) => (
                   <option key={a.id} value={a.id}>
-                    {a.accountNumber} ({a.currency}) - Bal: {Number(a.balance).toFixed(2)} [{a.shard}]
+                    {a.accountNumber} ({a.user?.fullName || `${a.currency} Wallet`}) — Bal: {Number(a.balance).toFixed(2)} {a.currency}
                   </option>
                 ))}
               </select>

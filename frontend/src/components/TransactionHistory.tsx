@@ -135,7 +135,7 @@ export const TransactionHistory: React.FC<TransactionHistoryProps> = ({
           {/* Account Filter */}
           <div>
             <label className="text-[11px] font-bold uppercase tracking-wider text-[#5F6773] block mb-1.5">
-              Filter By Shard Account
+              Filter By Account
             </label>
             <select
               value={filterAccountId}
@@ -145,7 +145,7 @@ export const TransactionHistory: React.FC<TransactionHistoryProps> = ({
               <option value="">All Accounts (Global Network)</option>
               {accounts.map((acc) => (
                 <option key={acc.id} value={acc.id}>
-                  {acc.accountNumber} ({acc.user?.fullName?.split(' ')[0] || `Acc #${acc.id}`} • {acc.shard})
+                  {acc.accountNumber} ({acc.user?.fullName || `Acc #${acc.id}`}) — {acc.currency}
                 </option>
               ))}
             </select>

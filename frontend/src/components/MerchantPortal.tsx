@@ -574,7 +574,7 @@ export const MerchantPortal: React.FC<MerchantPortalProps> = ({
                   >
                     {accounts.map((acc) => (
                       <option key={acc.id} value={acc.id}>
-                        {acc.accountNumber} ({acc.shard}) &mdash; Bal: {acc.balance.toLocaleString()} {acc.currency}
+                        {acc.accountNumber} ({acc.user?.fullName || 'Wallet'}) &mdash; Bal: {acc.balance.toLocaleString()} {acc.currency}
                       </option>
                     ))}
                   </select>
