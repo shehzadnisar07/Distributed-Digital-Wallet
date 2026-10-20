@@ -41,6 +41,24 @@ public class TwoPhaseCommitCoordinator {
     private final BalanceCacheService balanceCacheService;
     private final AsyncQueueBufferService queueBufferService;
     private final com.transmoney.backend.service.chaos.ChaosEngineeringService chaosEngineeringService;
+    private final com.transmoney.backend.repository.TwoPhaseCommitLogRepository twoPhaseCommitLogRepository;
+
+    private void log2pcStep(String txId, String phase, String senderShard, String receiverShard, String details) {
+        try {
+            if (twoPhaseCommitLogRepository != null) {
+                twoPhaseCommitLogRepository.save(com.transmoney.backend.entity.TwoPhaseCommitLog.builder()
+                        .transactionId(txId)
+                        .phase(phase)
+                        .coordinatorNode("COORD_PRIMARY")
+                        .senderShard(senderShard)
+                        .receiverShard(receiverShard)
+                        .details(details)
+                        .build());
+            }
+        } catch (Exception ex) {
+            log.debug("Non-blocking 2PC WAL write: {}", ex.getMessage());
+        }
+    }
 
     /**
      * Executes an atomic transfer using Two-Phase Commit protocol semantics

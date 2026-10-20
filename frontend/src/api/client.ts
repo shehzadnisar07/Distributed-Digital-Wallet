@@ -452,3 +452,29 @@ export const triggerChaosRecovery = async (
 };
 
 
+
+
+// --- DDBMS Cluster Sharding Catalog & 2PC WAL Log Endpoints ---
+export const getClusterShards = async (): Promise<any[]> => {
+  const response = await api.get<ApiResponse<any[]>>('/cluster/shards');
+  return response.data.data;
+};
+
+export const get2pcLogs = async (limit = 50, txId?: string): Promise<any[]> => {
+  const params: Record<string, any> = { limit };
+  if (txId) params.txId = txId;
+  const response = await api.get<ApiResponse<any[]>>('/cluster/2pc-logs', { params });
+  return response.data.data;
+};
+
+export const getFxRateHistory = async (pair?: string, limit = 30): Promise<any[]> => {
+  const params: Record<string, any> = { limit };
+  if (pair) params.pair = pair;
+  const response = await api.get<ApiResponse<any[]>>('/cluster/fx-history', { params });
+  return response.data.data;
+};
+
+export const getClusterOverview = async (): Promise<Record<string, any>> => {
+  const response = await api.get<ApiResponse<Record<string, any>>>('/cluster/overview');
+  return response.data.data;
+};
