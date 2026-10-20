@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   QrCode,
   Scan,
@@ -13,7 +13,12 @@ import {
   Building2,
   TrendingUp,
   Receipt,
+  UploadCloud,
+  FileCode,
+  X,
+  Download,
 } from 'lucide-react';
+import jsQR from 'jsqr';
 import type { Account, Merchant, QrPaymentResponse, QrScanDetails, SettlementBatch, User } from '../types';
 import {
   getMerchants,
@@ -46,6 +51,11 @@ export const MerchantPortal: React.FC<MerchantPortalProps> = ({
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   // --- Scan & Pay State ---
+  const [scanMode, setScanMode] = useState<'upload' | 'paste'>('upload');
+  const [uploadedImagePreview, setUploadedImagePreview] = useState<string | null>(null);
+  const [isDecodingImage, setIsDecodingImage] = useState<boolean>(false);
+  const [decodeError, setDecodeError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [rawPayloadInput, setRawPayloadInput] = useState<string>('');
   const [scannedDetails, setScannedDetails] = useState<QrScanDetails | null>(null);
   const [scanPayerAccountId, setScanPayerAccountId] = useState<number>(
@@ -144,6 +154,81 @@ export const MerchantPortal: React.FC<MerchantPortalProps> = ({
       setScannedDetails(null);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Process uploaded image file and decode QR code
+  const processImageFile = (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      setDecodeError('Please upload a valid image file (PNG, JPG, JPEG, WEBP, SVG).');
+      return;
+    }
+    setDecodeError(null);
+    setIsDecodingImage(true);
+    setPaymentResult(null);
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target?.result as string;
+      setUploadedImagePreview(dataUrl);
+
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            setDecodeError('Could not process image context.');
+            setIsDecodingImage(false);
+            return;
+          }
+          ctx.drawImage(img, 0, 0);
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const code = jsQR(imageData.data, imageData.width, imageData.height, {
+            inversionAttempts: 'attemptBoth',
+          });
+
+          if (code && code.data && code.data.trim()) {
+            setRawPayloadInput(code.data.trim());
+            handleVerifyPayload(code.data.trim());
+            setSuccessMsg('QR Code detected and verified from image!');
+          } else {
+            setDecodeError('No QR Code detected in this image. Please ensure the QR code is clearly visible or paste the payload.');
+          }
+        } catch (err) {
+          console.error('QR decode error:', err);
+          setDecodeError('Failed to decode QR code from image.');
+        } finally {
+          setIsDecodingImage(false);
+        }
+      };
+      img.onerror = () => {
+        setDecodeError('Failed to load image file.');
+        setIsDecodingImage(false);
+      };
+      img.src = dataUrl;
+    };
+    reader.onerror = () => {
+      setDecodeError('Failed to read image file.');
+      setIsDecodingImage(false);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      processImageFile(file);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      processImageFile(file);
     }
   };
 
@@ -388,46 +473,172 @@ export const MerchantPortal: React.FC<MerchantPortalProps> = ({
           {/* Left Column: QR Input & Demo Invoice Presets */}
           <div className="lg:col-span-6 space-y-6">
             <div className="bg-white border border-[#EBE5DF] rounded-3xl p-6 shadow-xs">
-              <div className="flex items-center justify-between mb-3">
-                <label className="text-xs font-bold text-[#1A1D20] uppercase tracking-wider flex items-center gap-1.5">
-                  <Scan className="w-3.5 h-3.5 text-[#FF6651]" />
-                  <span>Scan or Paste QR Code Payload</span>
-                </label>
-                <span className="text-[11px] font-mono text-[#8C939E]">HMAC-SHA256 Token</span>
-              </div>
-
-              <textarea
-                value={rawPayloadInput}
-                onChange={(e) => setRawPayloadInput(e.target.value)}
-                placeholder="Paste Base64 URL QR Payload or JSON token here..."
-                rows={4}
-                className="w-full text-xs font-mono p-3.5 bg-[#FAF7F4] border border-[#EBE5DF] rounded-2xl focus:outline-none focus:border-[#FF6651] text-[#1A1D20]"
-              />
-
-              <div className="mt-3.5 flex items-center justify-between">
-                <button
-                  type="button"
-                  onClick={() => handleVerifyPayload()}
-                  disabled={loading || !rawPayloadInput.trim()}
-                  className="px-4 py-2.5 bg-[#FF6651] hover:bg-[#E54D34] text-white rounded-full text-xs font-bold disabled:opacity-50 transition flex items-center gap-2 cursor-pointer shadow-xs"
-                >
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>Verify QR Cryptography</span>
-                </button>
-
-                {rawPayloadInput && (
+              {/* Dual-Mode Selector Tabs */}
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#F2ECE5]">
+                <div className="flex items-center gap-1 p-1 bg-[#FAF7F4] rounded-full border border-[#EBE5DF]">
                   <button
+                    type="button"
                     onClick={() => {
-                      setRawPayloadInput('');
-                      setScannedDetails(null);
-                      setPaymentResult(null);
+                      setScanMode('upload');
+                      setDecodeError(null);
                     }}
-                    className="text-xs text-[#5F6773] hover:text-[#1A1D20] cursor-pointer font-medium"
+                    className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
+                      scanMode === 'upload'
+                        ? 'bg-[#1A1D20] text-white shadow-xs'
+                        : 'text-[#5F6773] hover:text-[#1A1D20]'
+                    }`}
                   >
-                    Clear
+                    <UploadCloud className="w-3.5 h-3.5 text-[#00A389]" />
+                    <span>Upload QR Image</span>
                   </button>
-                )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setScanMode('paste');
+                      setDecodeError(null);
+                    }}
+                    className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
+                      scanMode === 'paste'
+                        ? 'bg-[#1A1D20] text-white shadow-xs'
+                        : 'text-[#5F6773] hover:text-[#1A1D20]'
+                    }`}
+                  >
+                    <FileCode className="w-3.5 h-3.5 text-[#FF6651]" />
+                    <span>Paste Token</span>
+                  </button>
+                </div>
+
+                <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-[#E5F7F3] text-[#00A389] border border-[#00A389]/20 hidden sm:inline">
+                  HMAC-SHA256 Signed
+                </span>
               </div>
+
+              {/* MODE A: UPLOAD QR IMAGE (Default User Experience) */}
+              {scanMode === 'upload' && (
+                <div className="space-y-3">
+                  <div
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={handleDrop}
+                    onClick={() => fileInputRef.current?.click()}
+                    className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition flex flex-col items-center justify-center min-h-[170px] ${
+                      uploadedImagePreview
+                        ? 'border-[#00A389]/40 bg-[#E5F7F3]/20'
+                        : 'border-[#EBE5DF] hover:border-[#FF6651]/50 bg-[#FAF7F4] hover:bg-white'
+                    }`}
+                  >
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+
+                    {isDecodingImage ? (
+                      <div className="space-y-2 py-4">
+                        <RefreshCw className="w-8 h-8 text-[#FF6651] animate-spin mx-auto" />
+                        <div className="text-xs font-bold text-[#1A1D20]">
+                          Scanning &amp; decoding QR code from image...
+                        </div>
+                      </div>
+                    ) : uploadedImagePreview ? (
+                      <div className="space-y-3 w-full">
+                        <div className="relative inline-block mx-auto">
+                          <img
+                            src={uploadedImagePreview}
+                            alt="Uploaded QR Code"
+                            className="w-24 h-24 object-contain rounded-xl border border-[#EBE5DF] bg-white p-1.5 shadow-xs mx-auto"
+                          />
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setUploadedImagePreview(null);
+                              setRawPayloadInput('');
+                              setScannedDetails(null);
+                              setDecodeError(null);
+                              if (fileInputRef.current) fileInputRef.current.value = '';
+                            }}
+                            className="absolute -top-2 -right-2 p-1 bg-white hover:bg-rose-50 text-[#5F6773] hover:text-rose-600 rounded-full border border-[#EBE5DF] shadow-xs cursor-pointer"
+                            title="Remove Image"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                        <div className="text-xs text-[#00A389] font-bold flex items-center justify-center gap-1.5">
+                          <CheckCircle2 className="w-4 h-4" />
+                          <span>QR Code Decoded Successfully</span>
+                        </div>
+                        <div className="text-[11px] text-[#5F6773]">
+                          Click or drag a new image to replace
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-2 py-3">
+                        <div className="w-12 h-12 rounded-2xl bg-white border border-[#EBE5DF] flex items-center justify-center mx-auto text-[#FF6651] shadow-2xs">
+                          <UploadCloud className="w-6 h-6" />
+                        </div>
+                        <div className="space-y-0.5">
+                          <div className="text-xs font-black text-[#1A1D20]">
+                            Upload QR Code Image or Screenshot
+                          </div>
+                          <div className="text-[11px] text-[#5F6773]">
+                            Drag &amp; drop here or <span className="text-[#FF6651] font-bold underline">browse files</span>
+                          </div>
+                        </div>
+                        <div className="text-[10px] text-[#8C939E] font-mono">
+                          Supports PNG, JPG, JPEG, WEBP, SVG
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {decodeError && (
+                    <div className="p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 shrink-0 text-rose-600" />
+                      <span>{decodeError}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* MODE B: PASTE RAW PAYLOAD (Developer & Test Token Mode) */}
+              {scanMode === 'paste' && (
+                <div className="space-y-3">
+                  <textarea
+                    value={rawPayloadInput}
+                    onChange={(e) => setRawPayloadInput(e.target.value)}
+                    placeholder="Paste Base64 URL QR Payload or JSON token here..."
+                    rows={4}
+                    className="w-full text-xs font-mono p-3.5 bg-[#FAF7F4] border border-[#EBE5DF] rounded-2xl focus:outline-none focus:border-[#FF6651] text-[#1A1D20]"
+                  />
+
+                  <div className="flex items-center justify-between">
+                    <button
+                      type="button"
+                      onClick={() => handleVerifyPayload()}
+                      disabled={loading || !rawPayloadInput.trim()}
+                      className="px-4 py-2.5 bg-[#FF6651] hover:bg-[#E54D34] text-white rounded-full text-xs font-bold disabled:opacity-50 transition flex items-center gap-2 cursor-pointer shadow-xs"
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5" />
+                      <span>Verify QR Cryptography</span>
+                    </button>
+
+                    {rawPayloadInput && (
+                      <button
+                        onClick={() => {
+                          setRawPayloadInput('');
+                          setScannedDetails(null);
+                          setPaymentResult(null);
+                        }}
+                        className="text-xs text-[#5F6773] hover:text-[#1A1D20] cursor-pointer font-medium"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Quick Demo Invoices */}
@@ -834,7 +1045,24 @@ export const MerchantPortal: React.FC<MerchantPortalProps> = ({
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-center gap-2 font-mono text-xs">
+                  <div className="flex flex-wrap items-center justify-center gap-2 font-mono text-xs">
+                    <button
+                      onClick={() => {
+                        const blob = new Blob([generatedQr.svg], { type: 'image/svg+xml;charset=utf-8' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `QR-${activeMerchant?.merchantCode || 'POS'}.svg`;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                        setSuccessMsg('QR Code downloaded! You can now test uploading it in Scan & Pay.');
+                      }}
+                      className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg flex items-center gap-1.5 transition cursor-pointer"
+                    >
+                      <Download className="w-3.5 h-3.5 text-[#00A389]" />
+                      <span>Download QR</span>
+                    </button>
+
                     <button
                       onClick={() => {
                         navigator.clipboard.writeText(generatedQr.payload);
@@ -852,7 +1080,7 @@ export const MerchantPortal: React.FC<MerchantPortalProps> = ({
                         handleVerifyPayload(generatedQr.payload);
                         setSubTab('scan');
                       }}
-                      className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg flex items-center gap-1.5 transition cursor-pointer"
+                      className="px-3 py-1.5 bg-[#FF6651] hover:bg-[#E54D34] text-white rounded-lg flex items-center gap-1.5 transition cursor-pointer"
                     >
                       <Scan className="w-3.5 h-3.5" />
                       <span>Test in Scanner</span>
